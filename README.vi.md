@@ -11,7 +11,7 @@ Một thư viện UI React Native độc lập, không phụ thuộc framework, 
 npm install https://github.com/khanh2924/QKCore_UI.git
 
 # Nếu dùng yarn
-yarn add https://github.com/khanh2924/QKCore_UI.git
+yarn add qkcore-ui@https://github.com/khanh2924/QKCore_UI.git
 ```
 
 ## Thiết lập

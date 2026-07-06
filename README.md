@@ -11,7 +11,7 @@ A standalone, framework-agnostic React Native UI library extracted for modularit
 npm install https://github.com/khanh2924/QKCore_UI.git
 
 # If using yarn
-yarn add https://github.com/khanh2924/QKCore_UI.git
+yarn add qkcore-ui@https://github.com/khanh2924/QKCore_UI.git
 ```
 
 ## Setup

@@ -51,3 +51,4 @@ export * from './styles/margin.style';
 export * from './styles/padding.style';
 export * from './styles/radius.style';
 export * from './styles/typography.style';
+export { default as Typography } from './styles/typography.style';

@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useMemo, useState } from 'react';
+import React, { forwardRef, useCallback, useMemo, useState } from "react";
 
 import {
   Pressable,
@@ -7,7 +7,7 @@ import {
   TextInputProps,
   View,
   ViewStyle,
-} from 'react-native';
+} from "react-native";
 
 import Animated, {
   interpolate,
@@ -15,19 +15,18 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
-import Icon from './Icon';
-import { baseStyle } from '../../styles/base.style';
-import { paddingStyle } from '../../styles/padding.style';
-import { borderStyle, radiusStyle } from '../../styles/radius.style';
-import { useQKTheme } from '../../provider/QKProvider';
-
+} from "react-native-reanimated";
+import Icon from "./Icon";
+import { baseStyle } from "../../styles/base.style";
+import { paddingStyle } from "../../styles/padding.style";
+import { borderStyle, radiusStyle } from "../../styles/radius.style";
+import { useQKTheme } from "../../provider/QKProvider";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export type InputVariant = 'outlined' | 'filled' | 'underline';
+export type InputVariant = "outlined" | "filled" | "underline";
 
-export interface InputViewProps extends Omit<TextInputProps, 'onFocus'> {
+export interface InputViewProps extends Omit<TextInputProps, "onFocus"> {
   label?: string;
   variant?: InputVariant;
   /** Màu active (focus + label nổi) */
@@ -63,18 +62,18 @@ const InputView = forwardRef<TextInput, InputViewProps>(
   (
     {
       label,
-      variant = 'outlined',
+      variant = "outlined",
       activeColor,
-      idleColor = '#999',
+      idleColor,
       textColor,
-      fillColor = 'transparent',
+      fillColor = "transparent",
       containerStyle,
       secureTextEntry,
       onFocus,
       onChangeText,
       value,
-      primaryColor = '#000000',
-      backgroundColor = '#FFFFFF',
+      primaryColor,
+      backgroundColor,
       iconCancelSource,
       iconEyeSource,
       iconEyeHideSource,
@@ -86,9 +85,11 @@ const InputView = forwardRef<TextInput, InputViewProps>(
     const resolvedPrimaryColor = primaryColor ?? theme.primaryColor;
     const resolvedBackgroundColor = backgroundColor ?? theme.backgroundColor;
     const resolvedTextColor = textColor ?? theme.textColor;
+    const resolvedIdleColor = idleColor ?? theme.inactiveColor;
+    const resolvedActiveColor = activeColor ?? theme.activeColor ?? resolvedPrimaryColor;
 
     const [isFocused, setIsFocused] = useState(false);
-    const [text, setText] = useState(value ?? '');
+    const [text, setText] = useState(value ?? "");
     const [isSecure, setIsSecure] = useState(secureTextEntry ?? false);
 
     const isPassword = secureTextEntry === true;
@@ -100,7 +101,7 @@ const InputView = forwardRef<TextInput, InputViewProps>(
 
     // ── Handlers ──────────────────────────────────────────────────────────
 
-    const handleFocus: TextInputProps['onFocus'] = useCallback(() => {
+    const handleFocus: TextInputProps["onFocus"] = useCallback(() => {
       setIsFocused(true);
       floatAnim.set(withTiming(1, TIMING));
       focusAnim.set(withTiming(1, TIMING));
@@ -108,7 +109,7 @@ const InputView = forwardRef<TextInput, InputViewProps>(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [onFocus]);
 
-    const handleBlur: TextInputProps['onBlur'] = useCallback(() => {
+    const handleBlur: TextInputProps["onBlur"] = useCallback(() => {
       setIsFocused(false);
       focusAnim.set(withTiming(0, TIMING));
       if (!hasText) {
@@ -133,12 +134,12 @@ const InputView = forwardRef<TextInput, InputViewProps>(
     );
 
     const handleClear = useCallback(() => {
-      setText('');
+      setText("");
       // Dùng ref được forward từ ngoài nếu có
-      if (typeof ref === 'object' && ref?.current) {
+      if (typeof ref === "object" && ref?.current) {
         ref.current.clear();
       }
-      onChangeText?.('');
+      onChangeText?.("");
       if (!isFocused) {
         floatAnim.set(withTiming(0, TIMING));
       }
@@ -146,7 +147,7 @@ const InputView = forwardRef<TextInput, InputViewProps>(
     }, [isFocused, onChangeText, ref]);
 
     const focusInput = useCallback(() => {
-      if (typeof ref === 'object' && ref?.current) {
+      if (typeof ref === "object" && ref?.current) {
         ref.current.focus();
       }
     }, [ref]);
@@ -171,7 +172,7 @@ const InputView = forwardRef<TextInput, InputViewProps>(
       color: interpolateColor(
         focusAnim.get(),
         [0, 1],
-        [idleColor, activeColor ?? resolvedPrimaryColor],
+        [resolvedIdleColor, resolvedActiveColor],
       ),
     }));
 
@@ -179,10 +180,10 @@ const InputView = forwardRef<TextInput, InputViewProps>(
       const borderColor = interpolateColor(
         focusAnim.get(),
         [0, 1],
-        [idleColor, activeColor ?? resolvedPrimaryColor],
+        [resolvedIdleColor, resolvedActiveColor],
       );
 
-      if (variant === 'outlined') {
+      if (variant === "outlined") {
         return {
           borderColor,
           borderWidth: interpolate(focusAnim.get(), [0, 1], [1, 1.8]),
@@ -220,8 +221,9 @@ const InputView = forwardRef<TextInput, InputViewProps>(
             key="clear"
             onPress={handleClear}
             style={styles.iconBtn}
-            hitSlop={8}>
-            <Icon source={iconCancelSource} size={18} tintColor={idleColor} />
+            hitSlop={8}
+          >
+            <Icon source={iconCancelSource} size={18} tintColor={resolvedIdleColor} />
           </Pressable>,
         );
       }
@@ -230,13 +232,14 @@ const InputView = forwardRef<TextInput, InputViewProps>(
         icons.push(
           <Pressable
             key="eye"
-            onPress={() => setIsSecure(prev => !prev)}
+            onPress={() => setIsSecure((prev) => !prev)}
             style={styles.iconBtn}
-            hitSlop={8}>
+            hitSlop={8}
+          >
             <Icon
               source={isSecure ? iconEyeSource : iconEyeHideSource}
               size={18}
-              tintColor={idleColor}
+              tintColor={resolvedIdleColor}
             />
           </Pressable>,
         );
@@ -244,7 +247,7 @@ const InputView = forwardRef<TextInput, InputViewProps>(
 
       if (icons.length === 0) return true;
       return <View style={styles.rightIcons}>{icons}</View>;
-    }, [handleClear, hasText, idleColor, isPassword, isSecure]);
+    }, [handleClear, hasText, resolvedIdleColor, isPassword, isSecure, iconCancelSource, iconEyeSource, iconEyeHideSource]);
 
     // ── Render ─────────────────────────────────────────────────────────────
 
@@ -256,10 +259,11 @@ const InputView = forwardRef<TextInput, InputViewProps>(
               styles.container,
               variantContainerStyle[variant],
               borderAnimStyle,
-            ]}>
+            ]}
+          >
             {(label || props.placeholder) && (
               <>
-                {variant === 'outlined' && (
+                {variant === "outlined" && (
                   <Animated.View style={[styles.notch, notchStyle]} />
                 )}
                 <Animated.Text
@@ -272,10 +276,11 @@ const InputView = forwardRef<TextInput, InputViewProps>(
                       backgroundColor: resolvedBackgroundColor,
                     },
                     (isFocused || hasText) && borderStyle.s1,
-                    hasText && { borderColor: idleColor },
+                    hasText && { borderColor: resolvedIdleColor },
                     isFocused && { borderColor: resolvedPrimaryColor },
                   ]}
-                  numberOfLines={1}>
+                  numberOfLines={1}
+                >
                   {label || props.placeholder}
                 </Animated.Text>
               </>
@@ -284,13 +289,17 @@ const InputView = forwardRef<TextInput, InputViewProps>(
             <View style={styles.inputRow}>
               <TextInput
                 ref={ref}
-                style={[styles.font, styles.input, { color: resolvedTextColor }]}
+                style={[
+                  { fontFamily: theme.fontFamily },
+                  styles.input,
+                  { color: resolvedTextColor },
+                ]}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 onChangeText={handleChangeText}
                 value={text}
                 secureTextEntry={isSecure}
-                placeholderTextColor={idleColor}
+                placeholderTextColor={resolvedIdleColor}
                 {...props}
                 placeholder=""
               />
@@ -303,23 +312,20 @@ const InputView = forwardRef<TextInput, InputViewProps>(
   },
 );
 
-InputView.displayName = 'InputView';
+InputView.displayName = "InputView";
 
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingHorizontal: 14,
     paddingVertical: 10,
-    position: 'relative',
+    position: "relative",
   },
   filledContainer: {
     borderBottomWidth: 1,
     borderRadius: 10,
-  },
-  font: {
-    fontFamily: 'proxima_soft_bold',
   },
   iconBtn: {
     padding: 4,
@@ -331,21 +337,21 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
   },
   inputRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
+    alignItems: "center",
+    flexDirection: "row",
   },
   label: {
     left: 14,
     paddingHorizontal: 2,
-    position: 'absolute',
-    top: '50%',
+    position: "absolute",
+    top: "50%",
     zIndex: 1,
   },
   notch: {
     // backgroundColor: '#fff',
     height: 3,
     left: 10,
-    position: 'absolute',
+    position: "absolute",
     top: -1,
     width: 60,
     zIndex: 0,
@@ -355,8 +361,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   rightIcons: {
-    alignItems: 'center',
-    flexDirection: 'row',
+    alignItems: "center",
+    flexDirection: "row",
     gap: 4,
     marginLeft: 4,
   },
@@ -365,7 +371,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
   wrapper: {
-    width: '100%',
+    width: "100%",
   },
 });
 

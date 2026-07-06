@@ -1,10 +1,11 @@
 # QKCore-ui
 
-A standalone, framework-agnostic React Native UI library extracted for modularity and performance.
+*Đọc bằng [Tiếng Việt](README.vi.md)*
+
+A standalone, framework-agnostic React Native UI library extracted for modularity, performance, and a premium haptic feel.
 
 ## Installation
 
-You can install this library locally in your project:
 ```bash
 # If using npm
 npm install https://github.com/khanh2924/QKCore_UI.git
@@ -15,29 +16,18 @@ yarn add https://github.com/khanh2924/QKCore_UI.git
 
 ## Setup
 
-This library requires no extra setup or Provider wrappers! All components are designed to accept style properties (like colors or assets) directly via plain React props, maximizing modularity and keeping the dependency footprint minimal.
+This library requires no extra setup or Provider wrappers! All components are designed to accept style properties (like colors or assets) directly via plain React props, maximizing modularity and keeping the dependency footprint minimal. Haptic feedback is integrated natively.
 
-## Usage
+---
 
-Import components directly from the library and pass necessary props:
+## Documentation
 
-```tsx
-import { Button, InputView, Dialog } from 'qkcore-ui';
+For a comprehensive guide on all available properties and utilities, please refer to the detailed documentation files:
 
-// Example: Passing colors directly as props
-<Button 
-  label="Submit" 
-  primaryColor="#007AFF"
-  onPrimaryColor="#FFFFFF"
-  onPress={() => console.log('Pressed')} 
-/>
+- 📘 [**Components Guide**](./docs/COMPONENTS.md): Detailed props, variants, and behaviors for `Button`, `Dialog`, `InputView`, `Slider`, `Progressbar`, and more.
+- 🎨 [**Utility Styles Guide**](./docs/STYLES.md): How to use `baseStyle`, `paddingStyle`, `marginStyle`, `radiusStyle`, and other pre-defined CSS-like style objects for rapid UI layout.
 
-<InputView 
-  placeholder="Username"
-  primaryColor="#007AFF"
-  iconCancelSource={require('./assets/ic_cancel.png')}
-/>
-```
+---
 
 ## Dependencies
 Ensure your project has the following peer dependencies installed:

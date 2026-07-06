@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 
 import {
   StyleSheet,
   Text as RNText,
   TextProps,
   ColorValue,
-} from 'react-native';
+} from "react-native";
 
-import { baseStyle } from '../../styles/base.style';
-import { TypographyStyle } from '../../styles/typography.style';
+import { baseStyle } from "../../styles/base.style";
+import { TypographyStyle } from "../../styles/typography.style";
 
 export type CustomTextProps = TextProps & {
   color?: ColorValue;
@@ -26,7 +26,8 @@ const Text: React.FC<CustomTextProps> = ({ center = false, ...props }) => {
         { color: props.color },
         props.typography,
         props.style,
-      ]}>
+      ]}
+    >
       {props.children}
     </RNText>
   );
@@ -35,7 +36,5 @@ const Text: React.FC<CustomTextProps> = ({ center = false, ...props }) => {
 export default Text;
 
 const styles = StyleSheet.create({
-  container: {
-    fontFamily: 'proxima_soft_bold',
-  },
+  container: {},
 });

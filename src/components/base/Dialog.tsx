@@ -148,12 +148,14 @@ const Dialog: React.FC<DialogProps> = ({
     backdropAnim.set(
       withTiming(1, { duration: 250 }, (finished?: boolean) => {
         if (finished && !disableHaptic) {
-          scheduleOnRN(() => {
-            RNReactNativeHapticFeedback.trigger(hapticType as any, {
+          scheduleOnRN(
+            RNReactNativeHapticFeedback.trigger,
+            hapticType as any,
+            {
               enableVibrateFallback: true,
               ignoreAndroidSystemSettings: false,
-            });
-          });
+            },
+          );
         }
       }),
     );

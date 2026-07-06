@@ -43,6 +43,9 @@ export { default as TouchableOpacity } from './components/base/TouchableOpacity'
 export * from './components/base/View';
 export { default as View } from './components/base/View';
 
+// Provider
+export * from './provider/QKProvider';
+
 // Styles
 export { abs } from './styles/abs.style';
 export { baseStyle } from './styles/base.style';

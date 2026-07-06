@@ -12,6 +12,8 @@ import Animated, {
 
 import Text from '../base/Text';
 import TouchableOpacity from '../base/TouchableOpacity';
+import { useQKTheme } from '../../provider/QKProvider';
+
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -124,20 +126,23 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
 
 // ─── RadioGroup ───────────────────────────────────────────────────────────────
 
-export const RadioGroup: React.FC<RadioGroupProps> = ({
   value,
   onChange,
-  activeColor = '#4A90E2',
-  inactiveColor = '#C4C4C4',
+  activeColor,
+  inactiveColor,
   labelStyle,
   children,
 }) => {
+  const theme = useQKTheme();
+  const resolvedActiveColor = activeColor ?? theme.activeColor;
+  const resolvedInactiveColor = inactiveColor ?? theme.inactiveColor;
+
   return (
     <RadioContext.Provider
       value={{
         selected: value,
-        activeColor,
-        inactiveColor,
+        activeColor: resolvedActiveColor,
+        inactiveColor: resolvedInactiveColor,
         onSelect: onChange,
         labelStyle,
       }}>

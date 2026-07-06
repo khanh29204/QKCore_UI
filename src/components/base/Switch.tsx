@@ -9,6 +9,8 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { useQKTheme } from '../../provider/QKProvider';
+
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -36,10 +38,14 @@ const SPRING = { damping: 18, stiffness: 280, mass: 0.6 };
 const Switch: React.FC<SwitchProps> = ({
   value,
   onValueChange,
-  onColor = '#4A90E2',
-  offColor = '#C4C4C4',
+  onColor,
+  offColor,
   disabled = false,
 }) => {
+  const theme = useQKTheme();
+  const resolvedOnColor = onColor ?? theme.activeColor;
+  const resolvedOffColor = offColor ?? theme.inactiveColor;
+
   const progress = useSharedValue(value ? 1 : 0);
 
   useEffect(() => {
@@ -50,7 +56,7 @@ const Switch: React.FC<SwitchProps> = ({
     backgroundColor: interpolateColor(
       progress.value,
       [0, 1],
-      [offColor, onColor],
+      [resolvedOffColor, resolvedOnColor],
     ),
   }));
 

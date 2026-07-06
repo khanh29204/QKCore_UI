@@ -16,7 +16,17 @@ yarn add qkcore-ui@https://github.com/khanh2924/QKCore_UI.git
 
 ## Thiết lập
 
-Thư viện này không yêu cầu bất kỳ thiết lập phức tạp hay Provider nào bọc bên ngoài! Tất cả các component đều được thiết kế để nhận trực tiếp các thuộc tính style (như màu sắc, icon) thông qua React props thông thường, giúp tối đa hóa tính module và giữ cho dependency cực kỳ nhỏ gọn. Haptic feedback cũng đã được tích hợp sẵn (Native).
+Thư viện này mặc định không yêu cầu bất kỳ thiết lập phức tạp hay Provider nào bọc bên ngoài! Tất cả các component đều được thiết kế để nhận trực tiếp các thuộc tính style (như màu sắc, icon) thông qua React props thông thường, giúp tối đa hóa tính module và giữ cho dependency cực kỳ nhỏ gọn. Haptic feedback cũng đã được tích hợp sẵn (Native).
+
+Tuy nhiên, bạn hoàn toàn có thể bọc ứng dụng bằng `QKProvider` (như một tuỳ chọn) để cấu hình theme toàn cục (màu sắc cơ bản). Các component sẽ tự động kế thừa màu từ Provider nếu bạn không truyền màu thủ công vào prop:
+
+```tsx
+import { QKProvider } from 'qkcore-ui';
+
+<QKProvider theme={{ primaryColor: '#E91E63', activeColor: '#4A90E2' }}>
+  <App />
+</QKProvider>
+```
 
 ---
 

@@ -16,7 +16,17 @@ yarn add qkcore-ui@https://github.com/khanh2924/QKCore_UI.git
 
 ## Setup
 
-This library requires no extra setup or Provider wrappers! All components are designed to accept style properties (like colors or assets) directly via plain React props, maximizing modularity and keeping the dependency footprint minimal. Haptic feedback is integrated natively.
+This library requires no extra setup or Provider wrappers by default! All components are designed to accept style properties (like colors or assets) directly via plain React props, maximizing modularity and keeping the dependency footprint minimal. Haptic feedback is integrated natively.
+
+Optionally, you can wrap your app with `QKProvider` to configure a global theme (base colors) that components will automatically inherit if not manually specified:
+
+```tsx
+import { QKProvider } from 'qkcore-ui';
+
+<QKProvider theme={{ primaryColor: '#E91E63', activeColor: '#4A90E2' }}>
+  <App />
+</QKProvider>
+```
 
 ---
 

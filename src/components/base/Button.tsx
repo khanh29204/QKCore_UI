@@ -21,6 +21,7 @@ import Animated, {
 import Text from './Text';
 import View from './View';
 import RNReactNativeHapticFeedback from 'react-native-haptic-feedback';
+import { useQKTheme } from '../../provider/QKProvider';
 
 import { baseStyle } from '../../styles/base.style';
 import { gapStyle } from '../../styles/gap.style';
@@ -63,11 +64,15 @@ const Button: React.FC<ButtonProps> = ({
   style,
   labelStyle,
   children,
-  primaryColor = '#000000',
-  onPrimaryColor = '#FFFFFF',
+  primaryColor,
+  onPrimaryColor,
   disableHaptic = false,
   ...props
 }) => {
+  const theme = useQKTheme();
+  const resolvedPrimaryColor = primaryColor ?? theme.primaryColor;
+  const resolvedOnPrimaryColor = onPrimaryColor ?? theme.onPrimaryColor;
+
   const isDisabled = props.disabled || loading;
   const scale = useSharedValue(1);
 
@@ -76,12 +81,12 @@ const Button: React.FC<ButtonProps> = ({
   const containerVariantStyle = (): ViewStyle => {
     switch (variant) {
       case 'solid':
-        return { backgroundColor: backgroundColor ?? primaryColor };
+        return { backgroundColor: backgroundColor ?? resolvedPrimaryColor };
       case 'outline':
         return {
           backgroundColor: 'transparent',
           borderWidth: 1.5,
-          borderColor: backgroundColor ?? primaryColor,
+          borderColor: backgroundColor ?? resolvedPrimaryColor,
         };
       case 'ghost':
         return { backgroundColor: 'transparent' };
@@ -92,10 +97,10 @@ const Button: React.FC<ButtonProps> = ({
     if (color) return color;
     switch (variant) {
       case 'solid':
-        return onPrimaryColor;
+        return resolvedOnPrimaryColor;
       case 'outline':
       case 'ghost':
-        return backgroundColor ?? primaryColor;
+        return backgroundColor ?? resolvedPrimaryColor;
     }
   };
 
@@ -172,7 +177,7 @@ const Button: React.FC<ButtonProps> = ({
         disabled={isDisabled}
         style={[
           styles.base,
-          { backgroundColor: primaryColor },
+          { backgroundColor: resolvedPrimaryColor },
           baseStyle.center,
           radiusStyle.full,
           paddingStyle.h[20],

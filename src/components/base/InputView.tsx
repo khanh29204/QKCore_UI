@@ -20,6 +20,8 @@ import Icon from './Icon';
 import { baseStyle } from '../../styles/base.style';
 import { paddingStyle } from '../../styles/padding.style';
 import { borderStyle, radiusStyle } from '../../styles/radius.style';
+import { useQKTheme } from '../../provider/QKProvider';
+
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -80,7 +82,10 @@ const InputView = forwardRef<TextInput, InputViewProps>(
     },
     ref,
   ) => {
-    const resolvedTextColor = textColor ?? '#000000';
+    const theme = useQKTheme();
+    const resolvedPrimaryColor = primaryColor ?? theme.primaryColor;
+    const resolvedBackgroundColor = backgroundColor ?? theme.backgroundColor;
+    const resolvedTextColor = textColor ?? theme.textColor;
 
     const [isFocused, setIsFocused] = useState(false);
     const [text, setText] = useState(value ?? '');
@@ -166,7 +171,7 @@ const InputView = forwardRef<TextInput, InputViewProps>(
       color: interpolateColor(
         focusAnim.get(),
         [0, 1],
-        [idleColor, activeColor ?? primaryColor],
+        [idleColor, activeColor ?? resolvedPrimaryColor],
       ),
     }));
 
@@ -174,7 +179,7 @@ const InputView = forwardRef<TextInput, InputViewProps>(
       const borderColor = interpolateColor(
         focusAnim.get(),
         [0, 1],
-        [idleColor, activeColor ?? primaryColor],
+        [idleColor, activeColor ?? resolvedPrimaryColor],
       );
 
       if (variant === 'outlined') {
@@ -264,11 +269,11 @@ const InputView = forwardRef<TextInput, InputViewProps>(
                     labelStyle,
                     radiusStyle[8],
                     (hasText || isFocused) && {
-                      backgroundColor: backgroundColor,
+                      backgroundColor: resolvedBackgroundColor,
                     },
                     (isFocused || hasText) && borderStyle.s1,
                     hasText && { borderColor: idleColor },
-                    isFocused && { borderColor: primaryColor },
+                    isFocused && { borderColor: resolvedPrimaryColor },
                   ]}
                   numberOfLines={1}>
                   {label || props.placeholder}

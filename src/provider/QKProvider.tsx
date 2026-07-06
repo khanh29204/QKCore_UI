@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
 export interface QKTheme {
   primaryColor: string;
@@ -7,18 +7,23 @@ export interface QKTheme {
   inactiveColor: string;
   backgroundColor: string;
   textColor: string;
+  fontFamily?: string;
 }
 
 export const defaultQKTheme: QKTheme = {
-  primaryColor: '#000000',
-  onPrimaryColor: '#FFFFFF',
-  activeColor: '#4A90E2',
-  inactiveColor: '#C4C4C4',
-  backgroundColor: '#FFFFFF',
-  textColor: '#000000',
+  primaryColor: "#000000",
+  onPrimaryColor: "#FFFFFF",
+  activeColor: "#4A90E2",
+  inactiveColor: "#C4C4C4",
+  backgroundColor: "#FFFFFF",
+  textColor: "#000000",
+  fontFamily: undefined,
 };
 
-const QKThemeContext = createContext<{ theme: QKTheme; setTheme: (theme: Partial<QKTheme>) => void }>({
+const QKThemeContext = createContext<{
+  theme: QKTheme;
+  setTheme: (theme: Partial<QKTheme>) => void;
+}>({
   theme: defaultQKTheme,
   setTheme: () => {},
 });
@@ -29,7 +34,10 @@ export interface QKProviderProps {
 }
 
 export const QKProvider: React.FC<QKProviderProps> = ({ theme, children }) => {
-  const [currentTheme, setCurrentTheme] = useState<QKTheme>({ ...defaultQKTheme, ...theme });
+  const [currentTheme, setCurrentTheme] = useState<QKTheme>({
+    ...defaultQKTheme,
+    ...theme,
+  });
 
   const setTheme = (newTheme: Partial<QKTheme>) => {
     setCurrentTheme((prev) => ({ ...prev, ...newTheme }));

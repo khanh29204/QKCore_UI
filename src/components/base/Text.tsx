@@ -9,6 +9,7 @@ import {
 
 import { baseStyle } from "../../styles/base.style";
 import { TypographyStyle } from "../../styles/typography.style";
+import { useQKTheme } from "../../provider/QKProvider";
 
 export type CustomTextProps = TextProps & {
   color?: ColorValue;
@@ -17,6 +18,8 @@ export type CustomTextProps = TextProps & {
 };
 
 const Text: React.FC<CustomTextProps> = ({ center = false, ...props }) => {
+  const theme = useQKTheme();
+
   return (
     <RNText
       {...props}
@@ -24,6 +27,7 @@ const Text: React.FC<CustomTextProps> = ({ center = false, ...props }) => {
         center && baseStyle.center,
         styles.container,
         { color: props.color },
+        { fontFamily: theme.fontFamily },
         props.typography,
         props.style,
       ]}

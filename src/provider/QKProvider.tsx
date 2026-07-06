@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
+import { HapticProvider } from "./HapticProvider";
 
 export interface QKTheme {
   primaryColor: string;
@@ -30,10 +31,15 @@ const QKThemeContext = createContext<{
 
 export interface QKProviderProps {
   theme?: Partial<QKTheme>;
+  hapticEnabled?: boolean;
   children: ReactNode;
 }
 
-export const QKProvider: React.FC<QKProviderProps> = ({ theme, children }) => {
+export const QKProvider: React.FC<QKProviderProps> = ({
+  theme,
+  hapticEnabled = true,
+  children,
+}) => {
   const [currentTheme, setCurrentTheme] = useState<QKTheme>({
     ...defaultQKTheme,
     ...theme,
@@ -44,9 +50,11 @@ export const QKProvider: React.FC<QKProviderProps> = ({ theme, children }) => {
   };
 
   return (
-    <QKThemeContext.Provider value={{ theme: currentTheme, setTheme }}>
-      {children}
-    </QKThemeContext.Provider>
+    <HapticProvider defaultEnabled={hapticEnabled}>
+      <QKThemeContext.Provider value={{ theme: currentTheme, setTheme }}>
+        {children}
+      </QKThemeContext.Provider>
+    </HapticProvider>
   );
 };
 

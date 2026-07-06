@@ -43,6 +43,7 @@ export { default as View } from "./components/base/View";
 
 // Provider
 export * from "./provider/QKProvider";
+export * from "./provider/HapticProvider";
 
 // Styles
 export { abs } from "./styles/abs.style";

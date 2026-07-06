@@ -44,11 +44,11 @@ export * from './components/base/View';
 export { default as View } from './components/base/View';
 
 // Styles
-export * from './styles/abs.style';
-export * from './styles/base.style';
-export * from './styles/gap.style';
-export * from './styles/margin.style';
-export * from './styles/padding.style';
-export * from './styles/radius.style';
+export { abs } from './styles/abs.style';
+export { baseStyle } from './styles/base.style';
+export { gapStyle } from './styles/gap.style';
+export { marginStyle } from './styles/margin.style';
+export { paddingStyle } from './styles/padding.style';
+export { radiusStyle } from './styles/radius.style';
 export * from './styles/typography.style';
 export { default as Typography } from './styles/typography.style';

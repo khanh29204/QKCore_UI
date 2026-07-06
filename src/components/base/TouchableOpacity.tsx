@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 import {
   ColorValue,
@@ -6,16 +6,16 @@ import {
   GestureResponderEvent,
   TouchableOpacity as RNTouchableOpacity,
   TouchableOpacityProps,
-} from 'react-native';
+} from "react-native";
 
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
-import { baseStyle } from '../../styles/base.style';
-import RNReactNativeHapticFeedback from 'react-native-haptic-feedback';
+import { baseStyle } from "../../styles/base.style";
+import { useHaptic } from "../../provider/HapticProvider";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -40,6 +40,7 @@ const TouchableOpacity: React.FC<Props> = ({
   ...props
 }) => {
   const isDisabled = props.disabled;
+  const { hapticFeedback } = useHaptic();
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -60,10 +61,7 @@ const TouchableOpacity: React.FC<Props> = ({
   const _onPress = (event: GestureResponderEvent) => {
     if (isDisabled) return;
     if (!disableHaptic) {
-      RNReactNativeHapticFeedback.trigger('impactLight', {
-        enableVibrateFallback: true,
-        ignoreAndroidSystemSettings: false,
-      });
+      hapticFeedback("tap");
     }
     props.onPress?.(event);
   };
@@ -71,10 +69,7 @@ const TouchableOpacity: React.FC<Props> = ({
   const _onLongPress = (event: GestureResponderEvent) => {
     if (isDisabled) return;
     if (!disableHaptic) {
-      RNReactNativeHapticFeedback.trigger('impactHeavy', {
-        enableVibrateFallback: true,
-        ignoreAndroidSystemSettings: false,
-      });
+      hapticFeedback("heavy");
     }
     props.onLongPress?.(event);
   };
@@ -94,7 +89,8 @@ const TouchableOpacity: React.FC<Props> = ({
           { ...props.style },
         ]}
         onPress={_onPress}
-        onLongPress={_onLongPress}>
+        onLongPress={_onLongPress}
+      >
         {children}
       </RNTouchableOpacity>
     </Animated.View>

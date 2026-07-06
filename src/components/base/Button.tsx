@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 import {
   ActivityIndicator,
@@ -8,29 +8,28 @@ import {
   TouchableOpacity,
   TouchableOpacityProps,
   ViewStyle,
-} from 'react-native';
+} from "react-native";
 
 import Animated, {
   AnimatedProps,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
+import Text from "./Text";
+import View from "./View";
+import { useHaptic } from "../../provider/HapticProvider";
+import { useQKTheme } from "../../provider/QKProvider";
 
-import Text from './Text';
-import View from './View';
-import RNReactNativeHapticFeedback from 'react-native-haptic-feedback';
-import { useQKTheme } from '../../provider/QKProvider';
-
-import { baseStyle } from '../../styles/base.style';
-import { gapStyle } from '../../styles/gap.style';
-import { paddingStyle } from '../../styles/padding.style';
-import { radiusStyle } from '../../styles/radius.style';
+import { baseStyle } from "../../styles/base.style";
+import { gapStyle } from "../../styles/gap.style";
+import { paddingStyle } from "../../styles/padding.style";
+import { radiusStyle } from "../../styles/radius.style";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export type ButtonVariant = 'solid' | 'outline' | 'ghost';
+export type ButtonVariant = "solid" | "outline" | "ghost";
 
 export interface ButtonProps extends TouchableOpacityProps {
   label?: string;
@@ -57,7 +56,7 @@ const PRESS_OUT_CONFIG = { duration: 100 };
 
 const Button: React.FC<ButtonProps> = ({
   label,
-  variant = 'solid',
+  variant = "solid",
   loading = false,
   backgroundColor,
   color,
@@ -70,6 +69,7 @@ const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const theme = useQKTheme();
+  const { hapticFeedback } = useHaptic();
   const resolvedPrimaryColor = primaryColor ?? theme.primaryColor;
   const resolvedOnPrimaryColor = onPrimaryColor ?? theme.onPrimaryColor;
 
@@ -80,26 +80,26 @@ const Button: React.FC<ButtonProps> = ({
 
   const containerVariantStyle = (): ViewStyle => {
     switch (variant) {
-      case 'solid':
+      case "solid":
         return { backgroundColor: backgroundColor ?? resolvedPrimaryColor };
-      case 'outline':
+      case "outline":
         return {
-          backgroundColor: 'transparent',
+          backgroundColor: "transparent",
           borderWidth: 1.5,
           borderColor: backgroundColor ?? resolvedPrimaryColor,
         };
-      case 'ghost':
-        return { backgroundColor: 'transparent' };
+      case "ghost":
+        return { backgroundColor: "transparent" };
     }
   };
 
   const resolvedTextColor = (): string => {
     if (color) return color;
     switch (variant) {
-      case 'solid':
+      case "solid":
         return resolvedOnPrimaryColor;
-      case 'outline':
-      case 'ghost':
+      case "outline":
+      case "ghost":
         return backgroundColor ?? resolvedPrimaryColor;
     }
   };
@@ -121,20 +121,14 @@ const Button: React.FC<ButtonProps> = ({
 
   const _onPress = (event: GestureResponderEvent) => {
     if (!disableHaptic) {
-      RNReactNativeHapticFeedback.trigger('impactLight', {
-        enableVibrateFallback: true,
-        ignoreAndroidSystemSettings: false,
-      });
+      hapticFeedback("tap");
     }
     props.onPress?.(event);
   };
 
   const _onLongPress = (event: GestureResponderEvent) => {
     if (!disableHaptic) {
-      RNReactNativeHapticFeedback.trigger('impactHeavy', {
-        enableVibrateFallback: true,
-        ignoreAndroidSystemSettings: false,
-      });
+      hapticFeedback("heavy");
     }
     props.onLongPress?.(event);
   };
@@ -146,7 +140,7 @@ const Button: React.FC<ButtonProps> = ({
       return (
         <ActivityIndicator
           size="small"
-          color={variant === 'solid' ? '#fff' : backgroundColor}
+          color={variant === "solid" ? "#fff" : backgroundColor}
         />
       );
     }
@@ -159,7 +153,8 @@ const Button: React.FC<ButtonProps> = ({
     return (
       <Text
         style={[styles.label, { color: resolvedTextColor() }, labelStyle]}
-        numberOfLines={1}>
+        numberOfLines={1}
+      >
         {label}
       </Text>
     );
@@ -185,7 +180,8 @@ const Button: React.FC<ButtonProps> = ({
           containerVariantStyle(),
           isDisabled && styles.disabled,
           style,
-        ]}>
+        ]}
+      >
         <View row style={[baseStyle.center, gapStyle[8]]}>
           {renderContent()}
         </View>
@@ -206,7 +202,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: "600",
     letterSpacing: 0.2,
   },
 });

@@ -4,7 +4,7 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from 'react';
+} from "react";
 
 import {
   Dimensions,
@@ -13,28 +13,26 @@ import {
   StyleProp,
   StyleSheet,
   ViewStyle,
-} from 'react-native';
+} from "react-native";
 
 import {
   Gesture,
   GestureDetector,
   GestureHandlerRootView,
-} from 'react-native-gesture-handler';
+} from "react-native-gesture-handler";
 import Animated, {
   interpolate,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
-} from 'react-native-reanimated';
-import { scheduleOnRN } from 'react-native-worklets';
-import RNReactNativeHapticFeedback from 'react-native-haptic-feedback';
-
-export type HapticType = 'tap' | 'heavy' | 'tick' | 'light' | string;
+} from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
+import { useHaptic, QKHapticType } from "../../provider/HapticProvider";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-export type DialogPosition = 'bottom' | 'top' | 'left' | 'right' | 'center';
+export type DialogPosition = "bottom" | "top" | "left" | "right" | "center";
 
 export interface DialogProps {
   visible: boolean;
@@ -47,7 +45,7 @@ export interface DialogProps {
   backdropOpacity?: number;
   contentStyle?: StyleProp<ViewStyle>;
   children: React.ReactNode;
-  hapticType?: HapticType;
+  hapticType?: QKHapticType;
   disableHaptic?: boolean;
 }
 
@@ -59,55 +57,55 @@ const SPRING_CONFIG = {
   mass: 0.8,
 };
 
-const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get('window');
+const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
 
 function getInitialTranslate(position: DialogPosition) {
   switch (position) {
-    case 'bottom':
+    case "bottom":
       return { x: 0, y: SCREEN_H };
-    case 'top':
+    case "top":
       return { x: 0, y: -SCREEN_H };
-    case 'left':
+    case "left":
       return { x: -SCREEN_W, y: 0 };
-    case 'right':
+    case "right":
       return { x: SCREEN_W, y: 0 };
-    case 'center':
+    case "center":
       return { x: 0, y: 0 };
   }
 }
 
 function getDragAxis(position: DialogPosition) {
   switch (position) {
-    case 'bottom':
-    case 'top':
-      return 'y';
-    case 'left':
-    case 'right':
-      return 'x';
-    case 'center':
+    case "bottom":
+    case "top":
+      return "y";
+    case "left":
+    case "right":
+      return "x";
+    case "center":
       return null;
   }
 }
 
 function getContainerStyle(position: DialogPosition): ViewStyle {
   const base: ViewStyle = {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
     top: 0,
     bottom: 0,
   };
   switch (position) {
-    case 'bottom':
-      return { ...base, justifyContent: 'flex-end', alignItems: 'center' };
-    case 'top':
-      return { ...base, justifyContent: 'flex-start', alignItems: 'center' };
-    case 'left':
-      return { ...base, justifyContent: 'center', alignItems: 'flex-start' };
-    case 'right':
-      return { ...base, justifyContent: 'center', alignItems: 'flex-end' };
-    case 'center':
-      return { ...base, justifyContent: 'center', alignItems: 'center' };
+    case "bottom":
+      return { ...base, justifyContent: "flex-end", alignItems: "center" };
+    case "top":
+      return { ...base, justifyContent: "flex-start", alignItems: "center" };
+    case "left":
+      return { ...base, justifyContent: "center", alignItems: "flex-start" };
+    case "right":
+      return { ...base, justifyContent: "center", alignItems: "flex-end" };
+    case "center":
+      return { ...base, justifyContent: "center", alignItems: "center" };
   }
 }
 
@@ -116,17 +114,18 @@ function getContainerStyle(position: DialogPosition): ViewStyle {
 const Dialog: React.FC<DialogProps> = ({
   visible,
   onDismiss,
-  position = 'bottom',
+  position = "bottom",
   disableDrag = false,
   dismissThreshold = 0.3,
   dismissVelocity = 800,
-  backdropColor = '#000',
+  backdropColor = "#000",
   backdropOpacity = 0.5,
   contentStyle,
   children,
-  hapticType = 'impactLight',
+  hapticType = "tap",
   disableHaptic = false,
 }) => {
+  const { hapticFeedback } = useHaptic();
   // localVisible giữ Modal mount cho đến khi animation out kết thúc
   const [localVisible, setLocalVisible] = useState(visible);
   const isVisible = useRef(visible);
@@ -138,7 +137,7 @@ const Dialog: React.FC<DialogProps> = ({
 
   const translateX = useSharedValue(initial.x);
   const translateY = useSharedValue(initial.y);
-  const scale = useSharedValue(position === 'center' ? 0.85 : 1);
+  const scale = useSharedValue(position === "center" ? 0.85 : 1);
   const backdropAnim = useSharedValue(0);
   const axis = useMemo(() => getDragAxis(position), [position]);
 
@@ -148,18 +147,11 @@ const Dialog: React.FC<DialogProps> = ({
     backdropAnim.set(
       withTiming(1, { duration: 250 }, (finished?: boolean) => {
         if (finished && !disableHaptic) {
-          scheduleOnRN(
-            RNReactNativeHapticFeedback.trigger,
-            hapticType as any,
-            {
-              enableVibrateFallback: true,
-              ignoreAndroidSystemSettings: false,
-            },
-          );
+          scheduleOnRN(hapticFeedback, hapticType);
         }
       }),
     );
-    if (position === 'center') {
+    if (position === "center") {
       scale.set(withSpring(1, SPRING_CONFIG));
     } else {
       translateX.set(withSpring(0, SPRING_CONFIG));
@@ -172,17 +164,17 @@ const Dialog: React.FC<DialogProps> = ({
     (callback: () => void) => {
       backdropAnim.set(withTiming(0, { duration: 200 }));
 
-      if (position === 'center') {
+      if (position === "center") {
         scale.set(
           withTiming(0.85, { duration: 200 }, (finished?: boolean) => {
             if (finished) scheduleOnRN(callback);
           }),
         );
       } else {
-        const targetX = axis === 'x' ? initial.x : 0;
-        const targetY = axis === 'y' ? initial.y : 0;
+        const targetX = axis === "x" ? initial.x : 0;
+        const targetY = axis === "y" ? initial.y : 0;
 
-        if (axis === 'x') {
+        if (axis === "x") {
           translateX.set(
             withTiming(targetX, { duration: 280 }, (finished?: boolean) => {
               if (finished) scheduleOnRN(callback);
@@ -207,7 +199,7 @@ const Dialog: React.FC<DialogProps> = ({
     const run = () => {
       if (visible) {
         // Reset vị trí về trạng thái ẩn
-        if (position === 'center') {
+        if (position === "center") {
           scale.set(0.85);
         } else {
           translateX.set(initial.x);
@@ -236,42 +228,42 @@ const Dialog: React.FC<DialogProps> = ({
   const panGesture = useMemo(() => {
     return Gesture.Pan()
       .enabled(!disableDrag && axis !== null)
-      .activeOffsetX(axis === 'x' ? [-10, 10] : [-9999, 9999])
-      .activeOffsetY(axis === 'y' ? [-10, 10] : [-9999, 9999])
+      .activeOffsetX(axis === "x" ? [-10, 10] : [-9999, 9999])
+      .activeOffsetY(axis === "y" ? [-10, 10] : [-9999, 9999])
       .runOnJS(true) // Giữ runOnJS(true) cho Pan vì bạn đang dùng nó để call onDismiss trực tiếp
-      .onUpdate(e => {
+      .onUpdate((e) => {
         const isForward =
-          position === 'bottom'
+          position === "bottom"
             ? e.translationY > 0
-            : position === 'top'
+            : position === "top"
               ? e.translationY < 0
-              : position === 'left'
+              : position === "left"
                 ? e.translationX < 0
-                : position === 'right'
+                : position === "right"
                   ? e.translationX > 0
                   : false;
 
-        if (axis === 'x') {
+        if (axis === "x") {
           translateX.set(isForward ? e.translationX : e.translationX * 0.15);
-        } else if (axis === 'y') {
+        } else if (axis === "y") {
           translateY.set(isForward ? e.translationY : e.translationY * 0.15);
         }
       })
-      .onEnd(e => {
+      .onEnd((e) => {
         const isForward =
-          position === 'bottom'
+          position === "bottom"
             ? e.translationY > 0
-            : position === 'top'
+            : position === "top"
               ? e.translationY < 0
-              : position === 'left'
+              : position === "left"
                 ? e.translationX < 0
-                : position === 'right'
+                : position === "right"
                   ? e.translationX > 0
                   : false;
 
-        const dimSize = axis === 'x' ? dialogWidth.get() : dialogHeight.get();
-        const translation = axis === 'x' ? e.translationX : e.translationY;
-        const velocity = axis === 'x' ? e.velocityX : e.velocityY;
+        const dimSize = axis === "x" ? dialogWidth.get() : dialogHeight.get();
+        const translation = axis === "x" ? e.translationX : e.translationY;
+        const velocity = axis === "x" ? e.velocityX : e.velocityY;
 
         const shouldDismiss =
           isForward &&
@@ -281,7 +273,7 @@ const Dialog: React.FC<DialogProps> = ({
         if (shouldDismiss) {
           onDismiss();
         } else {
-          if (axis === 'x') {
+          if (axis === "x") {
             translateX.set(withSpring(0, SPRING_CONFIG));
           } else {
             translateY.set(withSpring(0, SPRING_CONFIG));
@@ -298,7 +290,7 @@ const Dialog: React.FC<DialogProps> = ({
   }));
 
   const dialogStyle = useAnimatedStyle(() => {
-    if (position === 'center') {
+    if (position === "center") {
       return {
         transform: [{ scale: scale.value }],
         opacity: interpolate(scale.value, [0.85, 1], [0, 1]),
@@ -320,7 +312,8 @@ const Dialog: React.FC<DialogProps> = ({
       visible={localVisible}
       animationType="none"
       statusBarTranslucent={false}
-      onRequestClose={onDismiss}>
+      onRequestClose={onDismiss}
+    >
       <GestureHandlerRootView style={StyleSheet.absoluteFill}>
         {/* Backdrop */}
         <Animated.View
@@ -328,7 +321,8 @@ const Dialog: React.FC<DialogProps> = ({
             StyleSheet.absoluteFill,
             { backgroundColor: backdropColor },
             backdropStyle,
-          ]}>
+          ]}
+        >
           <Pressable
             style={StyleSheet.absoluteFill}
             onPress={() => {
@@ -340,14 +334,16 @@ const Dialog: React.FC<DialogProps> = ({
         {/* Dialog container */}
         <Animated.View
           style={getContainerStyle(position)}
-          pointerEvents="box-none">
+          pointerEvents="box-none"
+        >
           <GestureDetector gesture={panGesture}>
             <Animated.View
               style={[styles.dialog, contentStyle, dialogStyle]}
               onLayout={(e: any) => {
                 dialogWidth.set(e.nativeEvent.layout.width);
                 dialogHeight.set(e.nativeEvent.layout.height);
-              }}>
+              }}
+            >
               {children}
             </Animated.View>
           </GestureDetector>
@@ -361,8 +357,8 @@ const styles = StyleSheet.create({
   dialog: {
     borderRadius: 16,
     elevation: 8,
-    overflow: 'hidden',
-    shadowColor: '#000',
+    overflow: "hidden",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.12,
     shadowRadius: 12,

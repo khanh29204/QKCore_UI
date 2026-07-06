@@ -126,6 +126,7 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
 
 // ─── RadioGroup ───────────────────────────────────────────────────────────────
 
+export const RadioGroup: React.FC<RadioGroupProps> = ({
   value,
   onChange,
   activeColor,

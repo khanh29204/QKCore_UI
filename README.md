@@ -6,56 +6,37 @@ A standalone, framework-agnostic React Native UI library extracted for modularit
 
 You can install this library locally in your project:
 ```bash
-yarn add file:../QKCore-ui
-# OR
-npm install ../QKCore-ui
+# If using npm
+npm install https://github.com/khanh2924/QKCore_UI.git
+
+# If using yarn
+yarn add https://github.com/khanh2924/QKCore_UI.git
 ```
 
 ## Setup
 
-This library requires a `QKProvider` to inject your app's specific `theme`, `colors`, `assets`, and `hapticFeedback` methods. Wrap your application's root component with it.
-
-```tsx
-import React from 'react';
-import { QKProvider } from 'qkcore-ui';
-import { hapticFeedback } from './src/utils/device/haptic';
-import Colors from './src/config/colors';
-import Assets from './src/config/assets';
-
-// Inside your root app component:
-export default function App() {
-  const currentTheme = {
-    palette: {
-      primary: '#000000',
-      onPrimary: '#FFFFFF',
-      background: '#FFFFFF',
-    }
-    // ... any other theme configs
-  };
-
-  return (
-    <QKProvider 
-      config={{
-        theme: currentTheme,
-        colors: Colors,
-        assets: Assets,
-        hapticFeedback: hapticFeedback,
-      }}
-    >
-      <YourAppContent />
-    </QKProvider>
-  );
-}
-```
+This library requires no extra setup or Provider wrappers! All components are designed to accept style properties (like colors or assets) directly via plain React props, maximizing modularity and keeping the dependency footprint minimal.
 
 ## Usage
 
-Import components directly from the library:
+Import components directly from the library and pass necessary props:
 
 ```tsx
 import { Button, InputView, Dialog } from 'qkcore-ui';
 
-<Button label="Submit" onPress={() => console.log('Pressed')} />
+// Example: Passing colors directly as props
+<Button 
+  label="Submit" 
+  primaryColor="#007AFF"
+  onPrimaryColor="#FFFFFF"
+  onPress={() => console.log('Pressed')} 
+/>
+
+<InputView 
+  placeholder="Username"
+  primaryColor="#007AFF"
+  iconCancelSource={require('./assets/ic_cancel.png')}
+/>
 ```
 
 ## Dependencies
@@ -66,3 +47,4 @@ Ensure your project has the following peer dependencies installed:
 - `react-native-svg`
 - `react-native-worklets`
 - `@d11/react-native-fast-image`
+- `react-native-haptic-feedback`

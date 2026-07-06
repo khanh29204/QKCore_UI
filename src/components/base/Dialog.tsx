@@ -28,8 +28,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
-
-import { useQKCore } from '../../provider/QKProvider';
+import RNReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
 export type HapticType = 'tap' | 'heavy' | 'tick' | 'light' | string;
 
@@ -49,6 +48,7 @@ export interface DialogProps {
   contentStyle?: StyleProp<ViewStyle>;
   children: React.ReactNode;
   hapticType?: HapticType;
+  disableHaptic?: boolean;
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -124,10 +124,9 @@ const Dialog: React.FC<DialogProps> = ({
   backdropOpacity = 0.5,
   contentStyle,
   children,
-  hapticType = 'tick',
+  hapticType = 'impactLight',
+  disableHaptic = false,
 }) => {
-  const { hapticFeedback: triggerHaptic } = useQKCore();
-
   // localVisible giữ Modal mount cho đến khi animation out kết thúc
   const [localVisible, setLocalVisible] = useState(visible);
   const isVisible = useRef(visible);
@@ -148,7 +147,14 @@ const Dialog: React.FC<DialogProps> = ({
   const animateIn = useCallback(() => {
     backdropAnim.set(
       withTiming(1, { duration: 250 }, (finished?: boolean) => {
-        if (finished) scheduleOnRN(() => triggerHaptic?.(hapticType));
+        if (finished && !disableHaptic) {
+          scheduleOnRN(() => {
+            RNReactNativeHapticFeedback.trigger(hapticType as any, {
+              enableVibrateFallback: true,
+              ignoreAndroidSystemSettings: false,
+            });
+          });
+        }
       }),
     );
     if (position === 'center') {

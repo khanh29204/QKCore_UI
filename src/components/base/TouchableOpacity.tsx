@@ -15,7 +15,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { baseStyle } from '../../styles/base.style';
-import { useQKCore } from '../../provider/QKProvider';
+import RNReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -30,14 +30,15 @@ type Props = TouchableOpacityProps & {
   center?: boolean;
   width?: DimensionValue;
   height?: DimensionValue;
+  disableHaptic?: boolean;
 };
 
 const TouchableOpacity: React.FC<Props> = ({
   children,
   center = false,
+  disableHaptic = false,
   ...props
 }) => {
-  const { hapticFeedback } = useQKCore();
   const isDisabled = props.disabled;
   const scale = useSharedValue(1);
 
@@ -58,13 +59,23 @@ const TouchableOpacity: React.FC<Props> = ({
 
   const _onPress = (event: GestureResponderEvent) => {
     if (isDisabled) return;
-    hapticFeedback?.('tap');
+    if (!disableHaptic) {
+      RNReactNativeHapticFeedback.trigger('impactLight', {
+        enableVibrateFallback: true,
+        ignoreAndroidSystemSettings: false,
+      });
+    }
     props.onPress?.(event);
   };
 
   const _onLongPress = (event: GestureResponderEvent) => {
     if (isDisabled) return;
-    hapticFeedback?.('heavy');
+    if (!disableHaptic) {
+      RNReactNativeHapticFeedback.trigger('impactHeavy', {
+        enableVibrateFallback: true,
+        ignoreAndroidSystemSettings: false,
+      });
+    }
     props.onLongPress?.(event);
   };
 

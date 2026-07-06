@@ -20,7 +20,8 @@ import Animated, {
 
 import Text from './Text';
 import View from './View';
-import { useQKCore } from '../../provider/QKProvider';
+import RNReactNativeHapticFeedback from 'react-native-haptic-feedback';
+
 import { baseStyle } from '../../styles/base.style';
 import { gapStyle } from '../../styles/gap.style';
 import { paddingStyle } from '../../styles/padding.style';
@@ -38,6 +39,9 @@ export interface ButtonProps extends TouchableOpacityProps {
   color?: string;
   labelStyle?: TextStyle;
   children?: React.ReactNode;
+  primaryColor?: string;
+  onPrimaryColor?: string;
+  disableHaptic?: boolean;
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -59,10 +63,11 @@ const Button: React.FC<ButtonProps> = ({
   style,
   labelStyle,
   children,
+  primaryColor = '#000000',
+  onPrimaryColor = '#FFFFFF',
+  disableHaptic = false,
   ...props
 }) => {
-  const { theme, hapticFeedback } = useQKCore();
-  const current = theme;
   const isDisabled = props.disabled || loading;
   const scale = useSharedValue(1);
 
@@ -71,12 +76,12 @@ const Button: React.FC<ButtonProps> = ({
   const containerVariantStyle = (): ViewStyle => {
     switch (variant) {
       case 'solid':
-        return { backgroundColor: backgroundColor ?? current.palette.primary };
+        return { backgroundColor: backgroundColor ?? primaryColor };
       case 'outline':
         return {
           backgroundColor: 'transparent',
           borderWidth: 1.5,
-          borderColor: backgroundColor ?? current.palette.primary,
+          borderColor: backgroundColor ?? primaryColor,
         };
       case 'ghost':
         return { backgroundColor: 'transparent' };
@@ -87,10 +92,10 @@ const Button: React.FC<ButtonProps> = ({
     if (color) return color;
     switch (variant) {
       case 'solid':
-        return current.palette.onPrimary;
+        return onPrimaryColor;
       case 'outline':
       case 'ghost':
-        return backgroundColor ?? current.palette.primary;
+        return backgroundColor ?? primaryColor;
     }
   };
 
@@ -110,12 +115,22 @@ const Button: React.FC<ButtonProps> = ({
   };
 
   const _onPress = (event: GestureResponderEvent) => {
-    hapticFeedback?.('tap');
+    if (!disableHaptic) {
+      RNReactNativeHapticFeedback.trigger('impactLight', {
+        enableVibrateFallback: true,
+        ignoreAndroidSystemSettings: false,
+      });
+    }
     props.onPress?.(event);
   };
 
   const _onLongPress = (event: GestureResponderEvent) => {
-    hapticFeedback?.('heavy');
+    if (!disableHaptic) {
+      RNReactNativeHapticFeedback.trigger('impactHeavy', {
+        enableVibrateFallback: true,
+        ignoreAndroidSystemSettings: false,
+      });
+    }
     props.onLongPress?.(event);
   };
 
@@ -157,7 +172,7 @@ const Button: React.FC<ButtonProps> = ({
         disabled={isDisabled}
         style={[
           styles.base,
-          { backgroundColor: current.palette.primary },
+          { backgroundColor: primaryColor },
           baseStyle.center,
           radiusStyle.full,
           paddingStyle.h[20],

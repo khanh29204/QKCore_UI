@@ -17,7 +17,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import Icon from './Icon';
-import { useQKCore } from '../../provider/QKProvider';
 import { baseStyle } from '../../styles/base.style';
 import { paddingStyle } from '../../styles/padding.style';
 import { borderStyle, radiusStyle } from '../../styles/radius.style';
@@ -39,6 +38,11 @@ export interface InputViewProps extends Omit<TextInputProps, 'onFocus'> {
   fillColor?: string;
   containerStyle?: ViewStyle;
   onFocus?: (focus: boolean) => void;
+  primaryColor?: string;
+  backgroundColor?: string;
+  iconCancelSource?: any;
+  iconEyeSource?: any;
+  iconEyeHideSource?: any;
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -67,13 +71,16 @@ const InputView = forwardRef<TextInput, InputViewProps>(
       onFocus,
       onChangeText,
       value,
+      primaryColor = '#000000',
+      backgroundColor = '#FFFFFF',
+      iconCancelSource,
+      iconEyeSource,
+      iconEyeHideSource,
       ...props
     },
     ref,
   ) => {
-    const { theme, colors, assets } = useQKCore();
-    const current = theme;
-    const resolvedTextColor = textColor ?? colors.text;
+    const resolvedTextColor = textColor ?? '#000000';
 
     const [isFocused, setIsFocused] = useState(false);
     const [text, setText] = useState(value ?? '');
@@ -159,7 +166,7 @@ const InputView = forwardRef<TextInput, InputViewProps>(
       color: interpolateColor(
         focusAnim.get(),
         [0, 1],
-        [idleColor, activeColor ?? current.palette.primary],
+        [idleColor, activeColor ?? primaryColor],
       ),
     }));
 
@@ -167,7 +174,7 @@ const InputView = forwardRef<TextInput, InputViewProps>(
       const borderColor = interpolateColor(
         focusAnim.get(),
         [0, 1],
-        [idleColor, activeColor ?? current.palette.primary],
+        [idleColor, activeColor ?? primaryColor],
       );
 
       if (variant === 'outlined') {
@@ -209,7 +216,7 @@ const InputView = forwardRef<TextInput, InputViewProps>(
             onPress={handleClear}
             style={styles.iconBtn}
             hitSlop={8}>
-            <Icon source={assets.ic_cancel} size={18} tintColor={idleColor} />
+            <Icon source={iconCancelSource} size={18} tintColor={idleColor} />
           </Pressable>,
         );
       }
@@ -222,7 +229,7 @@ const InputView = forwardRef<TextInput, InputViewProps>(
             style={styles.iconBtn}
             hitSlop={8}>
             <Icon
-              source={isSecure ? assets.ic_eye : assets.ic_eye_hide}
+              source={isSecure ? iconEyeSource : iconEyeHideSource}
               size={18}
               tintColor={idleColor}
             />
@@ -257,11 +264,11 @@ const InputView = forwardRef<TextInput, InputViewProps>(
                     labelStyle,
                     radiusStyle[8],
                     (hasText || isFocused) && {
-                      backgroundColor: current.palette.background,
+                      backgroundColor: backgroundColor,
                     },
                     (isFocused || hasText) && borderStyle.s1,
                     hasText && { borderColor: idleColor },
-                    isFocused && { borderColor: current.palette.primary },
+                    isFocused && { borderColor: primaryColor },
                   ]}
                   numberOfLines={1}>
                   {label || props.placeholder}

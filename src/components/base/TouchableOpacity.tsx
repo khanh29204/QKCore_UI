@@ -75,7 +75,7 @@ const TouchableOpacity: React.FC<Props> = ({
   };
 
   return (
-    <Animated.View style={animatedStyle}>
+    <Animated.View style={[animatedStyle, props.style]}>
       <RNTouchableOpacity
         {...props}
         activeOpacity={1}
@@ -83,10 +83,12 @@ const TouchableOpacity: React.FC<Props> = ({
         onPressOut={handlePressOut}
         style={[
           center && baseStyle.center,
-          { backgroundColor: props.backgroundColor },
-          { width: props.width },
-          { height: props.height },
-          { ...props.style },
+          props.backgroundColor
+            ? { backgroundColor: props.backgroundColor }
+            : undefined,
+          props.width ? { width: props.width } : undefined,
+          props.height ? { height: props.height } : undefined,
+          props.style,
         ]}
         onPress={_onPress}
         onLongPress={_onLongPress}

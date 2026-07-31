@@ -1,15 +1,17 @@
 # Components Guide
 
-*Đọc bằng [Tiếng Việt](COMPONENTS.vi.md)*
+_Đọc bằng [Tiếng Việt](COMPONENTS.vi.md)_
 
 This document provides an in-depth look at all the UI components exported by `QKCore-ui`.
 
 ---
 
 ## 1. InputView
+
 A highly animated text input supporting floating labels, multi-variant borders, and custom icons.
 
 **Props:**
+
 - `variant` (`'outlined' | 'filled' | 'underline'`): Determines the container style. Default is `outlined`.
 - `label` (`string`): The text that floats to the top when focused or when text is entered.
 - `activeColor` (`string`): Color of the label and border when focused. Overrides `primaryColor`.
@@ -26,9 +28,11 @@ A highly animated text input supporting floating labels, multi-variant borders, 
 ---
 
 ## 2. Dialog
+
 A fully animated, gesture-driven modal component using Reanimated and Worklets. Native haptic feedback is integrated natively.
 
 **Props:**
+
 - `visible` (`boolean`): Controls whether the dialog is shown.
 - `onDismiss` (`() => void`): Callback triggered when the backdrop is pressed, or when dismissed via swipe gesture.
 - `position` (`'bottom' | 'top' | 'left' | 'right' | 'center'`): Where the dialog originates and rests. Center position uses a scale animation; others use a slide (translation) animation.
@@ -44,9 +48,11 @@ A fully animated, gesture-driven modal component using Reanimated and Worklets. 
 ---
 
 ## 3. Button
+
 An interactive button with a scale-down animation on press and native haptic integration.
 
 **Props:**
+
 - `label` (`string`): Text displayed.
 - `variant` (`'solid' | 'outline' | 'ghost'`): Button style variant.
 - `loading` (`boolean`): Shows an `ActivityIndicator` and disables the button.
@@ -59,9 +65,11 @@ An interactive button with a scale-down animation on press and native haptic int
 ---
 
 ## 4. Slider
+
 A continuous slider component built entirely with Reanimated and Gesture Handler for 60fps performance.
 
 **Props:**
+
 - `value` (`number`): Current value.
 - `min` / `max` (`number`): Boundaries. Defaults are `0` and `100`.
 - `step` (`number`): Snaps the value to multiples of `step`. Defaults to `0` (continuous).
@@ -77,9 +85,11 @@ A continuous slider component built entirely with Reanimated and Gesture Handler
 ---
 
 ## 5. Progressbar
+
 Provides both `ProgressLinear` and `ProgressCircular` components. Smoothly animates value changes.
 
 **LinearProgressProps (`ProgressLinear`):**
+
 - `value` (`number`): `0-100`.
 - `direction` (`'horizontal' | 'vertical'`).
 - `notSmooth` (`boolean`): Disables the spring animation when value changes.
@@ -89,6 +99,7 @@ Provides both `ProgressLinear` and `ProgressCircular` components. Smoothly anima
 - `label` (`'inside' | 'outside' | 'none'`): Where to render the percentage text.
 
 **CircularProgressProps (`ProgressCircular`):**
+
 - `value` (`number`): `0-100`.
 - `radius` (`number`): Radius of the circle.
 - `strokeWidth` (`number`): Thickness of the circular stroke.
@@ -98,9 +109,11 @@ Provides both `ProgressLinear` and `ProgressCircular` components. Smoothly anima
 ---
 
 ## 6. Switch
+
 An animated boolean toggle switch.
 
 **Props:**
+
 - `value` (`boolean`): Current state.
 - `onValueChange` (`(value: boolean) => void`): Callback.
 - `onColor` / `offColor` (`string`): Track colors.
@@ -109,9 +122,11 @@ An animated boolean toggle switch.
 ---
 
 ## 7. Avatar
+
 A rounded image component powered by `@d11/react-native-fast-image`.
 
 **Props:**
+
 - `source` (`Source | ImageRequireSource`): Image source.
 - `size` (`number`): Automatically applies to both `width` and `height`, and applies a full border radius.
 - `onPress` (`() => void`): If provided, the Avatar is wrapped in a `TouchableOpacity`.
@@ -119,9 +134,11 @@ A rounded image component powered by `@d11/react-native-fast-image`.
 ---
 
 ## 8. Badge
+
 A small UI element typically used for notification counts.
 
 **Props:**
+
 - `label` (`string` | `number`).
 - `textColor` (`string`).
 - `backgroundColor` (`ColorValue`).
@@ -129,9 +146,41 @@ A small UI element typically used for notification counts.
 ---
 
 ## 9. TouchableOpacity
+
 A custom touchable wrapper that provides a subtle scale animation on press and integrates native haptics.
 
 **Props:**
+
 - `disableHaptic` (`boolean`): Disables `impactLight` on tap.
 - `center` (`boolean`): Automatically applies `alignItems: 'center'` and `justifyContent: 'center'`.
 - Inherits `TouchableOpacityProps`.
+
+---
+
+## 10. Radio & RadioGroup
+
+An animated Radio component supporting customizable layout directions (`row` or `column`), label positioning (`right`, `left`, `top`, `bottom`), and custom container/label/radio circle styling.
+
+**RadioGroup Props:**
+
+- `value` (`string`): Selected radio value.
+- `onChange` (`(value: string) => void`): Callback triggered when a radio option is selected.
+- `direction` (`'column' | 'row'`): Layout direction of the radio group items (Default: `'column'`).
+- `labelPosition` (`'right' | 'left' | 'top' | 'bottom'`): Default label position relative to the radio circle for child radio buttons.
+- `activeColor` / `inactiveColor` (`string`): Colors when selected and unselected.
+- `labelStyle` (`StyleProp<TextStyle>`): Default style for all child labels.
+- `style` (`StyleProp<ViewStyle>`): Container style for the radio group layout.
+
+**RadioButton Props:**
+
+- `label` (`string`): Label text.
+- `value` (`string`): Value associated with the option.
+- `selected` (`boolean`): Explicit selection override if used outside `RadioGroup`.
+- `color` (`string`): Overrides active color for this option.
+- `labelPosition` (`'right' | 'left' | 'top' | 'bottom'`): Position of label relative to the radio circle (Default: `'right'`).
+- `disabled` (`boolean`): Disables option interaction.
+- `numberOfLines` (`number`): Limits text lines to prevent overflow.
+- `style` (`StyleProp<ViewStyle>`): Custom container style for the option.
+- `labelStyle` (`StyleProp<TextStyle>`): Custom style for the label text.
+- `radioStyle` (`StyleProp<ViewStyle>`): Custom style for the outer radio circle.
+- `innerStyle` (`StyleProp<ViewStyle>`): Custom style for the inner animated dot.

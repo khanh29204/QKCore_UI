@@ -1,6 +1,11 @@
-import React, { createContext, useContext } from 'react';
-
-import { StyleSheet, TextStyle } from 'react-native';
+import React, { createContext, useContext } from "react";
+import {
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  View,
+  ViewStyle,
+} from "react-native";
 
 import Animated, {
   interpolate,
@@ -8,14 +13,20 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
-import Text from '../base/Text';
-import TouchableOpacity from '../base/TouchableOpacity';
-import { useQKTheme } from '../../provider/QKProvider';
-
+import Text from "../base/Text";
+import TouchableOpacity from "../base/TouchableOpacity";
+import { useQKTheme } from "../../provider/QKProvider";
+import { baseStyle } from "../../styles/base.style";
+import { gapStyle } from "../../styles/gap.style";
+import { paddingStyle } from "../../styles/padding.style";
+import { radiusStyle } from "../../styles/radius.style";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
+
+export type RadioLabelPosition = "right" | "left" | "top" | "bottom";
+export type RadioGroupDirection = "row" | "column";
 
 export interface RadioOption {
   label: string;
@@ -27,7 +38,12 @@ export interface RadioButtonProps extends RadioOption {
   /** Override context selection — dùng khi RadioButton nằm ngoài RadioGroup */
   selected?: boolean;
   color?: string;
-  labelStyle?: TextStyle;
+  labelStyle?: StyleProp<TextStyle>;
+  labelPosition?: RadioLabelPosition;
+  style?: StyleProp<ViewStyle>;
+  radioStyle?: StyleProp<ViewStyle>;
+  innerStyle?: StyleProp<ViewStyle>;
+  numberOfLines?: number;
 }
 
 export interface RadioGroupProps {
@@ -35,7 +51,10 @@ export interface RadioGroupProps {
   onChange: (value: string) => void;
   activeColor?: string;
   inactiveColor?: string;
-  labelStyle?: TextStyle;
+  labelStyle?: StyleProp<TextStyle>;
+  labelPosition?: RadioLabelPosition;
+  direction?: RadioGroupDirection;
+  style?: StyleProp<ViewStyle>;
   children: React.ReactNode;
 }
 
@@ -44,15 +63,16 @@ interface RadioContextValue {
   activeColor: string;
   inactiveColor: string;
   onSelect: (value: string) => void;
-  labelStyle?: TextStyle;
+  labelStyle?: StyleProp<TextStyle>;
+  labelPosition?: RadioLabelPosition;
 }
 
 // ─── Context ──────────────────────────────────────────────────────────────────
 
 const RadioContext = createContext<RadioContextValue>({
   selected: undefined,
-  activeColor: '#4A90E2',
-  inactiveColor: '#C4C4C4',
+  activeColor: "#4A90E2",
+  inactiveColor: "#C4C4C4",
   onSelect: () => {},
 });
 
@@ -61,6 +81,22 @@ const RadioContext = createContext<RadioContextValue>({
 const OUTER_SIZE = 20;
 const INNER_SIZE = 10;
 const SPRING = { damping: 18, stiffness: 280, mass: 0.6 };
+
+// ─── Helper ───────────────────────────────────────────────────────────────────
+
+const getContainerFlexStyle = (position: RadioLabelPosition) => {
+  switch (position) {
+    case "left":
+      return [styles.containerCommon, styles.rowReverse, gapStyle[10]];
+    case "top":
+      return [styles.containerCommon, styles.columnReverse, gapStyle[6]];
+    case "bottom":
+      return [styles.containerCommon, styles.column, gapStyle[6]];
+    case "right":
+    default:
+      return [styles.containerCommon, styles.row, gapStyle[10]];
+  }
+};
 
 // ─── RadioButton ──────────────────────────────────────────────────────────────
 
@@ -71,12 +107,25 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
   selected: selectedProp,
   color,
   labelStyle: labelStyleProp,
+  labelPosition: labelPositionProp,
+  style,
+  radioStyle,
+  innerStyle: customInnerStyle,
+  numberOfLines,
 }) => {
-  const { selected, activeColor, inactiveColor, onSelect, labelStyle } =
-    useContext(RadioContext);
+  const {
+    selected,
+    activeColor,
+    inactiveColor,
+    onSelect,
+    labelStyle: groupLabelStyle,
+    labelPosition: groupLabelPosition,
+  } = useContext(RadioContext);
 
   const resolvedActive = color ?? activeColor;
-  const resolvedLabelStyle = labelStyleProp ?? labelStyle;
+  const resolvedLabelStyle = labelStyleProp ?? groupLabelStyle;
+  const resolvedLabelPosition =
+    labelPositionProp ?? groupLabelPosition ?? "right";
   const isSelected =
     selectedProp !== undefined ? selectedProp : selected === value;
   const progress = useSharedValue(isSelected ? 1 : 0);
@@ -85,7 +134,7 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
     progress.set(withSpring(isSelected ? 1 : 0, SPRING));
   }, [isSelected, progress]);
 
-  const outerStyle = useAnimatedStyle(() => ({
+  const outerAnimatedStyle = useAnimatedStyle(() => ({
     borderColor: interpolateColor(
       progress.value,
       [0, 1],
@@ -94,7 +143,7 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
     borderWidth: interpolate(progress.value, [0, 1], [1.5, 2]),
   }));
 
-  const innerStyle = useAnimatedStyle(() => ({
+  const innerAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: interpolate(progress.value, [0, 1], [0, 1]) }],
     opacity: progress.value,
   }));
@@ -105,21 +154,32 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
         if (!disabled && !isSelected) onSelect(value);
       }}
       disabled={disabled}
-      style={[styles.row, disabled && styles.rowDisabled]}>
+      style={[
+        getContainerFlexStyle(resolvedLabelPosition),
+        disabled && styles.disabled,
+        style,
+      ]}
+    >
       {/* Outer circle */}
-      <Animated.View style={[styles.outer, outerStyle]}>
+      <Animated.View style={[styles.outer, outerAnimatedStyle, radioStyle]}>
         {/* Inner dot */}
         <Animated.View
           style={[
             styles.inner,
             { backgroundColor: resolvedActive },
-            innerStyle,
+            innerAnimatedStyle,
+            customInnerStyle,
           ]}
         />
       </Animated.View>
 
       {/* Label */}
-      <Text style={[styles.label, resolvedLabelStyle]}>{label}</Text>
+      <Text
+        numberOfLines={numberOfLines}
+        style={[styles.label, resolvedLabelStyle]}
+      >
+        {label}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -132,6 +192,9 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
   activeColor,
   inactiveColor,
   labelStyle,
+  labelPosition,
+  direction = "column",
+  style,
   children,
 }) => {
   const theme = useQKTheme();
@@ -146,8 +209,19 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
         inactiveColor: resolvedInactiveColor,
         onSelect: onChange,
         labelStyle,
-      }}>
-      {children}
+        labelPosition,
+      }}
+    >
+      <View
+        style={[
+          direction === "row"
+            ? [styles.groupRow, gapStyle[16]]
+            : [styles.groupColumn, gapStyle[12]],
+          style,
+        ]}
+      >
+        {children}
+      </View>
     </RadioContext.Provider>
   );
 };
@@ -155,29 +229,47 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
+  column: {
+    flexDirection: "column",
+  },
+  columnReverse: {
+    flexDirection: "column-reverse",
+  },
+  containerCommon: {
+    alignSelf: "flex-start",
+    ...baseStyle.centerH,
+    ...paddingStyle.v[4],
+  },
+  disabled: {
+    opacity: 0.4,
+  },
+  groupColumn: {
+    flexDirection: "column",
+  },
+  groupRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
   inner: {
-    borderRadius: INNER_SIZE / 2,
+    ...radiusStyle.full,
     height: INNER_SIZE,
     width: INNER_SIZE,
   },
   label: {
-    color: '#111',
+    ...baseStyle.flexS,
+    color: "#111",
     fontSize: 15,
   },
   outer: {
-    alignItems: 'center',
-    borderRadius: OUTER_SIZE / 2,
+    ...baseStyle.center,
+    ...radiusStyle.full,
     height: OUTER_SIZE,
-    justifyContent: 'center',
     width: OUTER_SIZE,
   },
   row: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 10,
-    paddingVertical: 4,
+    flexDirection: "row",
   },
-  rowDisabled: {
-    opacity: 0.4,
+  rowReverse: {
+    flexDirection: "row-reverse",
   },
 });

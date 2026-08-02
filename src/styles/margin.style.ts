@@ -1,3 +1,3 @@
-import { createSpacingStyle } from './type/style';
+import { createSpacingStyle } from "./type/style";
 
-export const marginStyle = createSpacingStyle('margin');
+export const marginStyle = createSpacingStyle("margin");

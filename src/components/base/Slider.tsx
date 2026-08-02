@@ -1,17 +1,17 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect } from "react";
 
-import { LayoutChangeEvent, StyleSheet, ViewStyle } from 'react-native';
+import { LayoutChangeEvent, StyleSheet, ViewStyle } from "react-native";
 
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   clamp,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-} from 'react-native-reanimated';
-import { scheduleOnRN } from 'react-native-worklets';
+} from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 
-import View from './View';
+import View from "./View";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -39,18 +39,18 @@ const THUMB_SPRING = { damping: 18, stiffness: 300, mass: 0.5 };
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function snapToStep(value: number, step: number): number {
-  'worklet';
+  "worklet";
   if (step <= 0) return value;
   return Math.round(value / step) * step;
 }
 
 function toPercent(value: number, min: number, max: number): number {
-  'worklet';
+  "worklet";
   return (value - min) / (max - min);
 }
 
 function fromPercent(percent: number, min: number, max: number): number {
-  'worklet';
+  "worklet";
   return min + percent * (max - min);
 }
 
@@ -63,9 +63,9 @@ const Slider: React.FC<SliderProps> = ({
   step = 0,
   onChange,
   onChangeEnd,
-  trackColor = '#E0E0E0',
-  fillColor = '#4A90E2',
-  thumbColor = '#fff',
+  trackColor = "#E0E0E0",
+  fillColor = "#4A90E2",
+  thumbColor = "#fff",
   thumbSize = 22,
   trackHeight = 4,
   disabled = false,
@@ -110,7 +110,7 @@ const Slider: React.FC<SliderProps> = ({
   const panGesture = Gesture.Pan()
     .enabled(!disabled)
     .runOnJS(false)
-    .onBegin(e => {
+    .onBegin((e) => {
       const w = trackWidth.value;
       if (w <= 0) return;
       const p = clamp(e.x / w, 0, 1);
@@ -118,7 +118,7 @@ const Slider: React.FC<SliderProps> = ({
       thumbScale.value = withSpring(1.2, THUMB_SPRING);
       scheduleOnRN(notifyChange, p);
     })
-    .onUpdate(e => {
+    .onUpdate((e) => {
       const w = trackWidth.value;
       if (w <= 0) return;
       const p = clamp(e.x / w, 0, 1);
@@ -126,7 +126,7 @@ const Slider: React.FC<SliderProps> = ({
       percent.set(p);
       scheduleOnRN(notifyChange, p);
     })
-    .onEnd(e => {
+    .onEnd((e) => {
       const w = trackWidth.value;
       const p = clamp(e.x / w, 0, 1);
       thumbScale.value = withSpring(1, THUMB_SPRING);
@@ -177,7 +177,8 @@ const Slider: React.FC<SliderProps> = ({
         <Animated.View
           onLayout={handleLayout}
           hitSlop={hitSlop}
-          style={[styles.track, dynamicTrackStyle]}>
+          style={[styles.track, dynamicTrackStyle]}
+        >
           {/* Fill */}
           <Animated.View style={[styles.fill, dynamicFillStyle, fillStyle]} />
 
@@ -201,26 +202,26 @@ const Slider: React.FC<SliderProps> = ({
 const styles = StyleSheet.create({
   fill: {
     left: 0,
-    position: 'absolute',
+    position: "absolute",
     top: 0,
   },
   root: {
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingVertical: 12,
-    width: '100%',
+    width: "100%",
   },
   thumb: {
     borderWidth: 1.5,
     elevation: 4,
-    position: 'absolute',
-    shadowColor: '#000',
+    position: "absolute",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
   },
   track: {
-    position: 'relative',
-    width: '100%',
+    position: "relative",
+    width: "100%",
   },
 });
 

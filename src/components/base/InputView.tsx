@@ -86,7 +86,8 @@ const InputView = forwardRef<TextInput, InputViewProps>(
     const resolvedBackgroundColor = backgroundColor ?? theme.backgroundColor;
     const resolvedTextColor = textColor ?? theme.textColor;
     const resolvedIdleColor = idleColor ?? theme.inactiveColor;
-    const resolvedActiveColor = activeColor ?? theme.activeColor ?? resolvedPrimaryColor;
+    const resolvedActiveColor =
+      activeColor ?? theme.activeColor ?? resolvedPrimaryColor;
 
     const [isFocused, setIsFocused] = useState(false);
     const [text, setText] = useState(value ?? "");
@@ -223,7 +224,11 @@ const InputView = forwardRef<TextInput, InputViewProps>(
             style={styles.iconBtn}
             hitSlop={8}
           >
-            <Icon source={iconCancelSource} size={18} tintColor={resolvedIdleColor} />
+            <Icon
+              source={iconCancelSource}
+              size={18}
+              tintColor={resolvedIdleColor}
+            />
           </Pressable>,
         );
       }
@@ -247,7 +252,16 @@ const InputView = forwardRef<TextInput, InputViewProps>(
 
       if (icons.length === 0) return true;
       return <View style={styles.rightIcons}>{icons}</View>;
-    }, [handleClear, hasText, resolvedIdleColor, isPassword, isSecure, iconCancelSource, iconEyeSource, iconEyeHideSource]);
+    }, [
+      handleClear,
+      hasText,
+      resolvedIdleColor,
+      isPassword,
+      isSecure,
+      iconCancelSource,
+      iconEyeSource,
+      iconEyeHideSource,
+    ]);
 
     // ── Render ─────────────────────────────────────────────────────────────
 

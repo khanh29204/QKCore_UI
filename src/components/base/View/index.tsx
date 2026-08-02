@@ -1,11 +1,11 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef } from "react";
 
-import { View as RNView } from 'react-native';
+import { View as RNView } from "react-native";
 
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { Props } from './type';
-import { baseStyle } from '../../../styles/base.style';
+import { Props } from "./type";
+import { baseStyle } from "../../../styles/base.style";
 
 const View = forwardRef<RNView, Props>(
   (
@@ -28,8 +28,8 @@ const View = forwardRef<RNView, Props>(
     const componentStyle = [
       flex && baseStyle.flex,
       center && baseStyle.center,
-      centerH && baseStyle.centerH,
-      centerV && baseStyle.centerV,
+      centerH && (row ? baseStyle.centerHRow : baseStyle.centerH),
+      centerV && (row ? baseStyle.centerVRow : baseStyle.centerV),
       row && baseStyle.row,
       spread && baseStyle.spread,
       backgroundColor && { backgroundColor },
@@ -46,6 +46,6 @@ const View = forwardRef<RNView, Props>(
   },
 );
 
-View.displayName = 'View';
+View.displayName = "View";
 
 export default View;

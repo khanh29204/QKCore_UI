@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
-import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, ViewStyle } from "react-native";
 
-import View from './View';
+import View from "./View";
 
-import type { Props as CustomViewProps } from './View/type';
+import type { Props as CustomViewProps } from "./View/type";
 
 type CardProps = CustomViewProps & {
   children?: React.ReactNode;
@@ -29,7 +29,8 @@ const Card: React.FC<CardProps> = ({
         backgroundColor && { backgroundColor },
         borderRadius && { borderRadius },
         props.style,
-      ]}>
+      ]}
+    >
       {props.children}
     </View>
   );
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
   card: {},
   shadow: {
     elevation: 5,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,

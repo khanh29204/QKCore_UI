@@ -1,6 +1,6 @@
 # Utility Styles Guide
 
-*Đọc bằng [Tiếng Việt](STYLES.vi.md)*
+_Đọc bằng [Tiếng Việt](STYLES.vi.md)_
 
 `QKCore-ui` offers predefined utility style objects (inspired by utility-first CSS frameworks) to help you rapidly build layouts directly in your components without writing repetitive `StyleSheet.create` blocks.
 
@@ -9,16 +9,19 @@
 Import the needed style objects directly from the library:
 
 ```tsx
-import { baseStyle, paddingStyle, gapStyle, radiusStyle } from 'qkcore-ui';
+import { baseStyle, paddingStyle, gapStyle, radiusStyle } from "qkcore-ui";
 
-<View style={[baseStyle.row, baseStyle.center, paddingStyle.all[16], gapStyle[8]]}>
+<View
+  style={[baseStyle.row, baseStyle.center, paddingStyle.all[16], gapStyle[8]]}
+>
   {/* Content */}
-</View>
+</View>;
 ```
 
 ---
 
 ## 1. `baseStyle`
+
 Layout, flexbox, and alignment utilities.
 
 - **Flex Behaviors:**
@@ -30,11 +33,13 @@ Layout, flexbox, and alignment utilities.
 - **Alignment (Cross Axis):**
   - `baseStyle.alignStart`: `{ alignItems: 'flex-start' }`
   - `baseStyle.alignEnd`: `{ alignItems: 'flex-end' }`
-  - `baseStyle.centerH`: `{ alignItems: 'center' }`
+  - `baseStyle.centerH`: `{ alignItems: 'center' }` (for Column)
+  - `baseStyle.centerVRow`: `{ alignItems: 'center' }` (for Row)
 - **Justification (Main Axis):**
   - `baseStyle.flexStart`: `{ justifyContent: 'flex-start' }`
   - `baseStyle.flexEnd`: `{ justifyContent: 'flex-end' }`
-  - `baseStyle.centerV`: `{ justifyContent: 'center' }`
+  - `baseStyle.centerV`: `{ justifyContent: 'center' }` (for Column)
+  - `baseStyle.centerHRow`: `{ justifyContent: 'center' }` (for Row)
   - `baseStyle.spread`: `{ justifyContent: 'space-between' }`
   - `baseStyle.spreadAround`: `{ justifyContent: 'space-around' }`
   - `baseStyle.evenly`: `{ justifyContent: 'space-evenly' }`
@@ -50,6 +55,7 @@ Layout, flexbox, and alignment utilities.
 ---
 
 ## 2. `paddingStyle` & `marginStyle`
+
 Spacing utilities. The available sizes generally follow a scale: `2, 4, 8, 10, 12, 16, 20, 24, 28, 32, 40, 48, 56, 64, 80, 120`.
 
 **Structure:** `paddingStyle.[direction][size]`
@@ -64,6 +70,7 @@ Spacing utilities. The available sizes generally follow a scale: `2, 4, 8, 10, 1
   - `r`: Right
 
 **Examples:**
+
 - `marginStyle.t[20]` = `{ marginTop: 20 }`
 - `paddingStyle.h[16]` = `{ paddingHorizontal: 16 }`
 - `paddingStyle.all[8]` = `{ padding: 8 }`
@@ -71,14 +78,17 @@ Spacing utilities. The available sizes generally follow a scale: `2, 4, 8, 10, 1
 ---
 
 ## 3. `gapStyle`
+
 Applies spacing between items within a Flexbox container (React Native 0.71+).
 
 **Usage:** `gapStyle[size]`
+
 - Example: `gapStyle[12]` = `{ gap: 12 }`
 
 ---
 
 ## 4. `radiusStyle` & `borderStyle`
+
 Utilities for `borderRadius` and `borderWidth`.
 
 **`radiusStyle` sizes:** `2, 4, 8, 10, 12, 16, 20, 24, 28, 32, 40, 120, 'full'`
@@ -93,22 +103,26 @@ Utilities for `borderRadius` and `borderWidth`.
   - `tl`, `tr`, `bl`, `br`: Specific corners.
 
 **Usage:**
+
 - `radiusStyle[16]` or `radiusStyle.all[16]` = `{ borderRadius: 16, overflow: 'hidden' }`
 - `radiusStyle.t[20]` = `{ borderTopLeftRadius: 20, borderTopRightRadius: 20, overflow: 'hidden' }`
 - `radiusStyle.full` = `{ borderRadius: 9999, overflow: 'hidden' }`
 
 **`borderStyle`:**
+
 - `borderStyle.s1` = `{ borderWidth: 1 }`
 - `borderStyle.s2` = `{ borderWidth: 2 }`
 - `borderStyle.b1` = `{ borderBottomWidth: 1 }`
-- *(Also includes `l1`, `r1`, `t1`, `s3`, `s4`)*
+- _(Also includes `l1`, `r1`, `t1`, `s3`, `s4`)_
 
 ---
 
 ## 5. `typographyStyle`
+
 Text styling utilities defining standard font sizes, weights, and line heights.
 
 **Available Styles:**
+
 - `typographyStyle.display`: `{ fontSize: 56, fontWeight: '700', lineHeight: 64 }`
 - `typographyStyle.h0`: `{ fontSize: 48, fontWeight: '700' }`
 - `typographyStyle.h1`: `{ fontSize: 32, fontWeight: '700' }`
@@ -127,6 +141,7 @@ Text styling utilities defining standard font sizes, weights, and line heights.
 ---
 
 ## 6. `absStyle`
+
 Absolute positioning constraints.
 
 - `absStyle.fill`: `{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }`

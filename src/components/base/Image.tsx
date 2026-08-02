@@ -1,19 +1,19 @@
-import React from 'react';
+import React from "react";
 
 import {
   DimensionValue,
   Image as RNImage,
   ImageProps as RNImageProps,
-} from 'react-native';
+} from "react-native";
 
-import FastImage, { FastImageProps } from '@d11/react-native-fast-image';
+import FastImage, { FastImageProps } from "@d11/react-native-fast-image";
 
 // Định nghĩa cấu trúc Props rõ ràng, giải quyết xung đột onLoad, onError, onLoadEnd...
 export type IconProps = Omit<
   RNImageProps,
-  'source' | 'onLoad' | 'onError' | 'onLoadEnd'
+  "source" | "onLoad" | "onError" | "onLoadEnd"
 > & {
-  source: RNImageProps['source'] | FastImageProps['source'];
+  source: RNImageProps["source"] | FastImageProps["source"];
   width?: DimensionValue;
   height?: DimensionValue;
 
@@ -36,17 +36,17 @@ const Image: React.FC<IconProps> = ({
   const imageStyle = [{ width, height }, style];
 
   const isRemoteImage =
-    typeof source === 'object' &&
+    typeof source === "object" &&
     source !== null &&
-    'uri' in source &&
-    typeof source.uri === 'string' &&
+    "uri" in source &&
+    typeof source.uri === "string" &&
     /^https?:\/\//i.test(source.uri);
 
   if (isRemoteImage) {
     return (
       <FastImage
         {...(props as any)} // Ép kiểu any ở đây để triệt tiêu xung đột định nghĩa sự kiện của hệ thống
-        source={source as FastImageProps['source']}
+        source={source as FastImageProps["source"]}
         style={imageStyle}
       />
     );
@@ -55,7 +55,7 @@ const Image: React.FC<IconProps> = ({
   return (
     <RNImage
       {...(props as any)}
-      source={source as RNImageProps['source']}
+      source={source as RNImageProps["source"]}
       style={imageStyle}
     />
   );

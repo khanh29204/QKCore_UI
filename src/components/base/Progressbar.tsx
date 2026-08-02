@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 
 import {
   DimensionValue,
@@ -6,25 +6,25 @@ import {
   StyleSheet,
   TextStyle,
   ViewStyle,
-} from 'react-native';
+} from "react-native";
 
 import Animated, {
   useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-} from 'react-native-reanimated';
-import Svg, { Circle } from 'react-native-svg';
+} from "react-native-reanimated";
+import Svg, { Circle } from "react-native-svg";
 
-import Text from './Text';
-import View from './View';
-import { baseStyle } from '../../styles/base.style';
-import { marginStyle } from '../../styles/margin.style';
+import Text from "./Text";
+import View from "./View";
+import { baseStyle } from "../../styles/base.style";
+import { marginStyle } from "../../styles/margin.style";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export type ProgressBarDirection = 'horizontal' | 'vertical';
-export type ProgressLabelPosition = 'inside' | 'outside' | 'none';
+export type ProgressBarDirection = "horizontal" | "vertical";
+export type ProgressLabelPosition = "inside" | "outside" | "none";
 
 export interface LinearProgressProps {
   /** 0–100 */
@@ -77,17 +77,17 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 export const ProgressLinear: React.FC<LinearProgressProps> = ({
   value,
-  direction = 'horizontal',
+  direction = "horizontal",
   notSmooth = false,
-  color = '#4A90E2',
-  trackColor = '#E0E0E0',
+  color = "#4A90E2",
+  trackColor = "#E0E0E0",
   thickness = 8,
   length,
-  label = 'none',
+  label = "none",
   labelStyle,
   style,
 }) => {
-  const isHorizontal = direction === 'horizontal';
+  const isHorizontal = direction === "horizontal";
   const progress = useSharedValue(0);
 
   useEffect(() => {
@@ -104,16 +104,16 @@ export const ProgressLinear: React.FC<LinearProgressProps> = ({
     if (isHorizontal) {
       return {
         width: `${progress.value}%` as any,
-        height: '100%',
-        position: 'absolute',
+        height: "100%",
+        position: "absolute",
         left: 0,
         top: 0,
       };
     }
     return {
       height: `${progress.value}%` as any,
-      width: '100%',
-      position: 'absolute',
+      width: "100%",
+      position: "absolute",
       bottom: 0,
       left: 0,
     };
@@ -121,18 +121,18 @@ export const ProgressLinear: React.FC<LinearProgressProps> = ({
 
   const trackStyle: ViewStyle = isHorizontal
     ? {
-        width: (length as DimensionValue) ?? '100%',
+        width: (length as DimensionValue) ?? "100%",
         height: thickness,
         backgroundColor: trackColor,
         borderRadius: thickness / 2,
-        overflow: 'hidden',
+        overflow: "hidden",
       }
     : {
         height: (length as DimensionValue) ?? 200,
         width: thickness,
         backgroundColor: trackColor,
         borderRadius: thickness / 2,
-        overflow: 'hidden',
+        overflow: "hidden",
       };
 
   const fillColor: ViewStyle = {
@@ -145,13 +145,14 @@ export const ProgressLinear: React.FC<LinearProgressProps> = ({
   return (
     <View row={isHorizontal} style={[baseStyle.center, style]}>
       {/* Label outside – trước track */}
-      {label === 'outside' && (
+      {label === "outside" && (
         <Text
           style={[
             styles.labelOutside,
             isHorizontal ? marginStyle.r[8] : marginStyle.b[8],
             labelStyle,
-          ]}>
+          ]}
+        >
           {percentText}
         </Text>
       )}
@@ -161,10 +162,11 @@ export const ProgressLinear: React.FC<LinearProgressProps> = ({
         <Animated.View style={[fillColor, fillStyle]} />
 
         {/* Label inside */}
-        {label === 'inside' && (
+        {label === "inside" && (
           <View
             style={[StyleSheet.absoluteFill, baseStyle.center]}
-            pointerEvents="none">
+            pointerEvents="none"
+          >
             <Text style={[styles.labelInsideText, labelStyle]}>
               {percentText}
             </Text>
@@ -180,11 +182,11 @@ export const ProgressLinear: React.FC<LinearProgressProps> = ({
 export const ProgressCircular: React.FC<CircularProgressProps> = ({
   value,
   notSmooth = false,
-  color = '#4A90E2',
-  trackColor = '#E0E0E0',
+  color = "#4A90E2",
+  trackColor = "#E0E0E0",
   radius = 48,
   strokeWidth = 8,
-  label = 'none',
+  label = "none",
   labelStyle,
   style,
 }) => {
@@ -237,7 +239,7 @@ export const ProgressCircular: React.FC<CircularProgressProps> = ({
       </Svg>
 
       {/* Label */}
-      {label !== 'none' && (
+      {label !== "none" && (
         <View style={StyleSheet.absoluteFill} pointerEvents="none">
           <View flex center>
             <Text style={[styles.circularLabelText, labelStyle]}>
@@ -254,21 +256,21 @@ export const ProgressCircular: React.FC<CircularProgressProps> = ({
 
 const styles = StyleSheet.create({
   circularLabelText: {
-    color: '#333',
+    color: "#333",
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   circularWrapper: {
-    position: 'relative',
+    position: "relative",
   },
   labelInsideText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   labelOutside: {
-    color: '#333',
+    color: "#333",
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });

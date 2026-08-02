@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 import {
   ColorValue,
@@ -6,13 +6,13 @@ import {
   StyleSheet,
   TextStyle,
   ViewStyle,
-} from 'react-native';
+} from "react-native";
 
-import Text from './Text';
-import View from './View';
-import { Props as BaseViewProps } from './View/type';
-import { paddingStyle } from '../../styles/padding.style';
-import { radiusStyle } from '../../styles/radius.style';
+import Text from "./Text";
+import View from "./View";
+import { Props as BaseViewProps } from "./View/type";
+import { paddingStyle } from "../../styles/padding.style";
+import { radiusStyle } from "../../styles/radius.style";
 
 type BadgeProps = BaseViewProps & {
   label: string;
@@ -27,14 +27,15 @@ const Badge: React.FC<BadgeProps> = ({
   label,
   labelStyle,
   style,
-  textColor = '#000000',
+  textColor = "#000000",
   ...props
 }) => {
   return (
     <View
       {...props}
       center
-      style={[styles.container, radiusStyle.full, paddingStyle.h[8], style]}>
+      style={[styles.container, radiusStyle.full, paddingStyle.h[8], style]}
+    >
       <Text color={textColor} style={labelStyle}>
         {label}
       </Text>

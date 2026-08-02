@@ -1,4 +1,4 @@
-import { ColorValue, DimensionValue, ViewProps } from 'react-native';
+import { ColorValue, DimensionValue, ViewProps } from "react-native";
 
 export type Props = ViewProps & {
   children?: React.ReactNode;

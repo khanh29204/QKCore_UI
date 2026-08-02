@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 
-import { ImageRequireSource } from 'react-native';
+import { ImageRequireSource } from "react-native";
 
-import { FastImageProps, Source } from '@d11/react-native-fast-image';
+import { FastImageProps, Source } from "@d11/react-native-fast-image";
 
-import Image from './Image';
-import TouchableOpacity from './TouchableOpacity';
-import { radiusStyle } from '../../styles/radius.style';
+import Image from "./Image";
+import TouchableOpacity from "./TouchableOpacity";
+import { radiusStyle } from "../../styles/radius.style";
 
 type AvatarProps = FastImageProps & {
   source: Source | ImageRequireSource;

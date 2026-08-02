@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet } from "react-native";
 
 import Animated, {
   interpolate,
@@ -8,9 +8,8 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-} from 'react-native-reanimated';
-import { useQKTheme } from '../../provider/QKProvider';
-
+} from "react-native-reanimated";
+import { useQKTheme } from "../../provider/QKProvider";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -76,7 +75,8 @@ const Switch: React.FC<SwitchProps> = ({
         if (!disabled) onValueChange(!value);
       }}
       disabled={disabled}
-      style={disabled ? styles.opacity_disabled : styles.opacity_enabled}>
+      style={disabled ? styles.opacity_disabled : styles.opacity_enabled}
+    >
       <Animated.View style={[styles.track, trackStyle]}>
         <Animated.View style={[styles.thumb, thumbStyle]} />
       </Animated.View>
@@ -96,11 +96,11 @@ const styles = StyleSheet.create({
     opacity: 1,
   },
   thumb: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: THUMB_SIZE / 2,
     elevation: 3,
     height: THUMB_SIZE,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   track: {
     borderRadius: TRACK_H / 2,
     height: TRACK_H,
-    justifyContent: 'center',
+    justifyContent: "center",
     width: TRACK_W,
   },
 });

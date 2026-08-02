@@ -16,12 +16,7 @@ const options: HapticOptions = {
 };
 
 export type QKHapticType =
-  | "tap"
-  | "tick"
-  | "heavy"
-  | "success"
-  | "error"
-  | "warning";
+  "tap" | "tick" | "heavy" | "success" | "error" | "warning";
 
 type NativeHapticType = Parameters<typeof ReactNativeHapticFeedback.trigger>[0];
 

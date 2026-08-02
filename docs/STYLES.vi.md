@@ -1,6 +1,6 @@
 # Hướng dẫn Utility Styles
 
-*Read in [English](STYLES.md)*
+_Read in [English](STYLES.md)_
 
 `QKCore-ui` cung cấp các object style tiện ích (lấy cảm hứng từ các framework utility-first CSS như Tailwind) để giúp bạn xây dựng bố cục (layout) giao diện cực nhanh trực tiếp trong component mà không cần phải viết lặp đi lặp lại các khối `StyleSheet.create`.
 
@@ -9,16 +9,19 @@
 Import các object style cần thiết trực tiếp từ thư viện:
 
 ```tsx
-import { baseStyle, paddingStyle, gapStyle, radiusStyle } from 'qkcore-ui';
+import { baseStyle, paddingStyle, gapStyle, radiusStyle } from "qkcore-ui";
 
-<View style={[baseStyle.row, baseStyle.center, paddingStyle.all[16], gapStyle[8]]}>
+<View
+  style={[baseStyle.row, baseStyle.center, paddingStyle.all[16], gapStyle[8]]}
+>
   {/* Nội dung */}
-</View>
+</View>;
 ```
 
 ---
 
 ## 1. `baseStyle`
+
 Các tiện ích về Layout, flexbox và căn chỉnh.
 
 - **Đặc tính Flex:**
@@ -30,11 +33,13 @@ Các tiện ích về Layout, flexbox và căn chỉnh.
 - **Căn chỉnh (Trục phụ - Cross Axis):**
   - `baseStyle.alignStart`: `{ alignItems: 'flex-start' }`
   - `baseStyle.alignEnd`: `{ alignItems: 'flex-end' }`
-  - `baseStyle.centerH`: `{ alignItems: 'center' }`
+  - `baseStyle.centerH`: `{ alignItems: 'center' }` (cho Column)
+  - `baseStyle.centerVRow`: `{ alignItems: 'center' }` (cho Row)
 - **Căn chỉnh (Trục chính - Main Axis):**
   - `baseStyle.flexStart`: `{ justifyContent: 'flex-start' }`
   - `baseStyle.flexEnd`: `{ justifyContent: 'flex-end' }`
-  - `baseStyle.centerV`: `{ justifyContent: 'center' }`
+  - `baseStyle.centerV`: `{ justifyContent: 'center' }` (cho Column)
+  - `baseStyle.centerHRow`: `{ justifyContent: 'center' }` (cho Row)
   - `baseStyle.spread`: `{ justifyContent: 'space-between' }`
   - `baseStyle.spreadAround`: `{ justifyContent: 'space-around' }`
   - `baseStyle.evenly`: `{ justifyContent: 'space-evenly' }`
@@ -50,6 +55,7 @@ Các tiện ích về Layout, flexbox và căn chỉnh.
 ---
 
 ## 2. `paddingStyle` & `marginStyle`
+
 Tiện ích khoảng cách. Các kích thước có sẵn thường theo thang đo chẵn: `2, 4, 8, 10, 12, 16, 20, 24, 28, 32, 40, 48, 56, 64, 80, 120`.
 
 **Cấu trúc:** `paddingStyle.[hướng][kích_thước]`
@@ -64,6 +70,7 @@ Tiện ích khoảng cách. Các kích thước có sẵn thường theo thang �
   - `r`: Phải (Right)
 
 **Ví dụ:**
+
 - `marginStyle.t[20]` = `{ marginTop: 20 }`
 - `paddingStyle.h[16]` = `{ paddingHorizontal: 16 }`
 - `paddingStyle.all[8]` = `{ padding: 8 }`
@@ -71,14 +78,17 @@ Tiện ích khoảng cách. Các kích thước có sẵn thường theo thang �
 ---
 
 ## 3. `gapStyle`
+
 Tạo khoảng cách giữa các phần tử bên trong một container Flexbox (yêu cầu React Native 0.71+).
 
 **Cấu trúc:** `gapStyle[kích_thước]`
+
 - Ví dụ: `gapStyle[12]` = `{ gap: 12 }`
 
 ---
 
 ## 4. `radiusStyle` & `borderStyle`
+
 Tiện ích bo góc (`borderRadius`) và độ dày viền (`borderWidth`).
 
 **Các kích cỡ `radiusStyle`:** `2, 4, 8, 10, 12, 16, 20, 24, 28, 32, 40, 120, 'full'`
@@ -93,22 +103,26 @@ Tiện ích bo góc (`borderRadius`) và độ dày viền (`borderWidth`).
   - `tl`, `tr`, `bl`, `br`: Từng góc cụ thể.
 
 **Ví dụ sử dụng:**
+
 - `radiusStyle[16]` hoặc `radiusStyle.all[16]` = `{ borderRadius: 16, overflow: 'hidden' }`
 - `radiusStyle.t[20]` = `{ borderTopLeftRadius: 20, borderTopRightRadius: 20, overflow: 'hidden' }`
 - `radiusStyle.full` = `{ borderRadius: 9999, overflow: 'hidden' }`
 
 **`borderStyle` (Độ dày viền):**
+
 - `borderStyle.s1` = `{ borderWidth: 1 }`
 - `borderStyle.s2` = `{ borderWidth: 2 }`
 - `borderStyle.b1` = `{ borderBottomWidth: 1 }`
-- *(Ngoài ra còn có `l1`, `r1`, `t1`, `s3`, `s4`)*
+- _(Ngoài ra còn có `l1`, `r1`, `t1`, `s3`, `s4`)_
 
 ---
 
 ## 5. `typographyStyle`
+
 Các tiện ích định dạng văn bản (text) quy định sẵn font size, độ đậm (weight), và line heights.
 
 **Các Style có sẵn:**
+
 - `typographyStyle.display`: `{ fontSize: 56, fontWeight: '700', lineHeight: 64 }`
 - `typographyStyle.h0`: `{ fontSize: 48, fontWeight: '700' }`
 - `typographyStyle.h1`: `{ fontSize: 32, fontWeight: '700' }`
@@ -127,6 +141,7 @@ Các tiện ích định dạng văn bản (text) quy định sẵn font size, �
 ---
 
 ## 6. `absStyle`
+
 Tiện ích định vị tuyệt đối (Absolute positioning).
 
 - `absStyle.fill`: `{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }`

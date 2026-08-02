@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import Image, { IconProps as CustomImageProps } from './Image';
+import Image, { IconProps as CustomImageProps } from "./Image";
 
 type IconProps = CustomImageProps & {
   size?: number;

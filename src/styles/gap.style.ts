@@ -1,3 +1,3 @@
-import { createGapStyle } from './type/style';
+import { createGapStyle } from "./type/style";
 
 export const gapStyle = createGapStyle();

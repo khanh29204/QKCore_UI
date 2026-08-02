@@ -1,4 +1,4 @@
-import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from 'react-native';
+import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from "react-native";
 
 const sizes = [
   -12, -8, -4, -2, 0, 2, 3, 4, 6, 8, 10, 12, 14, 16, 20, 24, 32, 40,
@@ -18,7 +18,7 @@ export type SpacingSystem = StyleGroup & {
 };
 
 export function createSpacingStyle(
-  prefix: 'padding' | 'margin',
+  prefix: "padding" | "margin",
 ): SpacingSystem {
   const raw: Record<string, Record<string, any>> = {
     all: {},
@@ -40,9 +40,9 @@ export function createSpacingStyle(
     r: `${prefix}Right`,
   };
 
-  sizes.forEach(s => {
+  sizes.forEach((s) => {
     const key = s.toString();
-    Object.keys(map).forEach(prop => {
+    Object.keys(map).forEach((prop) => {
       raw[prop][key] = { [map[prop]]: s };
     });
   });
@@ -62,7 +62,7 @@ export function createSpacingStyle(
 
 export function createGapStyle(): StyleGroup {
   const raw: Record<string, ViewStyle> = {};
-  sizes.forEach(s => {
+  sizes.forEach((s) => {
     raw[s.toString()] = { gap: s };
   });
   return StyleSheet.create(raw) as any;

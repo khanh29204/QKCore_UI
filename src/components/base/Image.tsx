@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   DimensionValue,
@@ -31,6 +31,7 @@ const Image: React.FC<IconProps> = ({
   height,
   source,
   style,
+  onError,
   ...props
 }) => {
   const imageStyle = [{ width, height }, style];
@@ -42,12 +43,27 @@ const Image: React.FC<IconProps> = ({
     typeof source.uri === "string" &&
     /^https?:\/\//i.test(source.uri);
 
-  if (isRemoteImage) {
+  // FastImage không tự thử lại sau lỗi mạng, dẫn tới ảnh mất hẳn.
+  // Khi nó báo lỗi thì fallback về RNImage để ảnh vẫn hiển thị được.
+  const [fallback, setFallback] = useState(false);
+
+  const uri = isRemoteImage ? (source as { uri?: string }).uri : undefined;
+
+  // Reset trạng thái fallback khi source thay đổi
+  useEffect(() => {
+    setFallback(false);
+  }, [uri]);
+
+  if (isRemoteImage && !fallback) {
     return (
       <FastImage
         {...(props as any)} // Ép kiểu any ở đây để triệt tiêu xung đột định nghĩa sự kiện của hệ thống
         source={source as FastImageProps["source"]}
         style={imageStyle}
+        onError={(e: any) => {
+          setFallback(true);
+          onError?.(e);
+        }}
       />
     );
   }
@@ -57,6 +73,7 @@ const Image: React.FC<IconProps> = ({
       {...(props as any)}
       source={source as RNImageProps["source"]}
       style={imageStyle}
+      onError={onError}
     />
   );
 };

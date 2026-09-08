@@ -6,14 +6,14 @@ import {
   ImageProps as RNImageProps,
 } from "react-native";
 
-import FastImage, { FastImageProps } from "@d11/react-native-fast-image";
+import TurboImage, { TurboImageProps } from "react-native-turbo-image";
 
 // Định nghĩa cấu trúc Props rõ ràng, giải quyết xung đột onLoad, onError, onLoadEnd...
 export type IconProps = Omit<
   RNImageProps,
   "source" | "onLoad" | "onError" | "onLoadEnd"
 > & {
-  source: RNImageProps["source"] | FastImageProps["source"];
+  source: RNImageProps["source"] | TurboImageProps["source"];
   width?: DimensionValue;
   height?: DimensionValue;
 
@@ -22,7 +22,6 @@ export type IconProps = Omit<
   onError?: any;
   onLoadEnd?: any;
 
-  // Cho phép nhận các props đặc thù khác của FastImage nếu có
   [key: string]: any;
 };
 
@@ -43,7 +42,6 @@ const Image: React.FC<IconProps> = ({
     typeof source.uri === "string" &&
     /^https?:\/\//i.test(source.uri);
 
-  // FastImage không tự thử lại sau lỗi mạng, dẫn tới ảnh mất hẳn.
   // Khi nó báo lỗi thì fallback về RNImage để ảnh vẫn hiển thị được.
   const [fallback, setFallback] = useState(false);
 
@@ -56,11 +54,12 @@ const Image: React.FC<IconProps> = ({
 
   if (isRemoteImage && !fallback) {
     return (
-      <FastImage
+      <TurboImage
         {...(props as any)} // Ép kiểu any ở đây để triệt tiêu xung đột định nghĩa sự kiện của hệ thống
-        source={source as FastImageProps["source"]}
+        source={source as TurboImageProps["source"]}
         style={imageStyle}
-        onError={(e: any) => {
+        cachePolicy="urlCache"
+        onFailure={(e: any) => {
           setFallback(true);
           onError?.(e);
         }}

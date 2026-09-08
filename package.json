@@ -4,7 +4,6 @@
   "main": "src/index.ts",
   "react-native": "src/index.ts",
   "peerDependencies": {
-    "@d11/react-native-fast-image": "*",
     "react": "*",
     "react-native": "*",
     "react-native-gesture-handler": "*",
@@ -12,7 +11,8 @@
     "react-native-reanimated": "*",
     "react-native-safe-area-context": "*",
     "react-native-svg": "*",
-    "react-native-worklets": "*"
+    "react-native-worklets": "*",
+    "react-native-turbo-image": "*"
   },
   "devDependencies": {
     "@types/react": "^19.2.17",

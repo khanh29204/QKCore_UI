@@ -46,5 +46,5 @@ Ensure your project has the following peer dependencies installed:
 - `react-native-safe-area-context`
 - `react-native-svg`
 - `react-native-worklets`
-- `@d11/react-native-fast-image`
+- `react-native-turbo-image`
 - `react-native-haptic-feedback`

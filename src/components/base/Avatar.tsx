@@ -2,14 +2,14 @@ import React from "react";
 
 import { ImageRequireSource } from "react-native";
 
-import { FastImageProps, Source } from "@d11/react-native-fast-image";
+import { Source } from "react-native-turbo-image";
 
-import Image from "./Image";
+import Image, { IconProps } from "./Image";
 import TouchableOpacity from "./TouchableOpacity";
 import { radiusStyle } from "../../styles/radius.style";
 
-type AvatarProps = FastImageProps & {
-  source: Source | ImageRequireSource;
+type AvatarProps = Omit<IconProps, "source"> & {
+  source: IconProps["source"] | ImageRequireSource;
   size?: number;
   onPress?: () => void;
 };
@@ -20,7 +20,7 @@ const Avatar: React.FC<AvatarProps> = ({ source, size, onPress, ...props }) => {
       <Image
         {...props}
         style={radiusStyle.full}
-        source={source}
+        source={source as IconProps["source"]}
         width={size}
         height={size}
       />

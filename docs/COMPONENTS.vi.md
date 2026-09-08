@@ -123,7 +123,7 @@ Nút gạt bật/tắt có animation.
 
 ## 7. Avatar
 
-Component ảnh bo tròn sử dụng `@d11/react-native-fast-image` để tối ưu tải ảnh.
+Component ảnh bo tròn sử dụng `react-native-turbo-image` để tối ưu tải ảnh.
 
 **Props:**
 

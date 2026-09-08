@@ -123,7 +123,7 @@ An animated boolean toggle switch.
 
 ## 7. Avatar
 
-A rounded image component powered by `@d11/react-native-fast-image`.
+A rounded image component powered by `react-native-turbo-image`.
 
 **Props:**
 

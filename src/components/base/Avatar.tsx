@@ -19,6 +19,8 @@ const Avatar: React.FC<AvatarProps> = ({ source, size, onPress, ...props }) => {
     <TouchableOpacity onPress={onPress} disabled={!onPress}>
       <Image
         {...props}
+        // Mặc định `cover` để ảnh đại diện không bị kéo méo; người dùng có thể override qua `...props`
+        resizeMode={props.resizeMode ?? "cover"}
         style={radiusStyle.full}
         source={source as IconProps["source"]}
         width={size}

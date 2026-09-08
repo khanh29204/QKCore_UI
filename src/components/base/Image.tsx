@@ -31,6 +31,7 @@ const Image: React.FC<IconProps> = ({
   source,
   style,
   onError,
+  tintColor,
   ...props
 }) => {
   const imageStyle = [{ width, height }, style];
@@ -59,6 +60,8 @@ const Image: React.FC<IconProps> = ({
         source={source as TurboImageProps["source"]}
         style={imageStyle}
         cachePolicy="urlCache"
+        // TurboImage dùng prop `tint` thay vì `tintColor` của RN
+        tint={tintColor as any}
         onFailure={(e: any) => {
           setFallback(true);
           onError?.(e);
@@ -72,6 +75,7 @@ const Image: React.FC<IconProps> = ({
       {...(props as any)}
       source={source as RNImageProps["source"]}
       style={imageStyle}
+      tintColor={tintColor}
       onError={onError}
     />
   );

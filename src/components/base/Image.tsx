@@ -21,7 +21,7 @@ export type IconProps = Omit<
   onLoad?: any;
   onError?: any;
   onLoadEnd?: any;
-
+  icon?: boolean;
   [key: string]: any;
 };
 
@@ -32,6 +32,7 @@ const Image: React.FC<IconProps> = ({
   style,
   onError,
   tintColor,
+  icon,
   ...props
 }) => {
   const imageStyle = [{ width, height }, style];
@@ -53,7 +54,7 @@ const Image: React.FC<IconProps> = ({
     setFallback(false);
   }, [uri]);
 
-  if (isRemoteImage && !fallback) {
+  if (isRemoteImage && !fallback && (icon ?? true)) {
     return (
       <TurboImage
         {...(props as any)} // Ép kiểu any ở đây để triệt tiêu xung đột định nghĩa sự kiện của hệ thống

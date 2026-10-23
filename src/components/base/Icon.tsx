@@ -8,7 +8,7 @@ type IconProps = CustomImageProps & {
 
 const Icon: React.FC<IconProps> = ({ size, ...props }) => {
   return (
-    <Image {...props} style={[{ width: size, height: size }, props.style]} />
+    <Image {...props} style={[{ width: size, height: size }, props.style]} icon={true} />
   );
 };
 

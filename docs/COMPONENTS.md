@@ -37,6 +37,7 @@ A fully animated, gesture-driven modal component using Reanimated and Worklets. 
 - `onDismiss` (`() => void`): Callback triggered when the backdrop is pressed, or when dismissed via swipe gesture.
 - `position` (`'bottom' | 'top' | 'left' | 'right' | 'center'`): Where the dialog originates and rests. Center position uses a scale animation; others use a slide (translation) animation.
 - `disableDrag` (`boolean`): If true, prevents dismissing the dialog via swipe gesture.
+- `disableAnimation` (`boolean`): If true, shows and dismisses the dialog without animations.
 - `dismissThreshold` (`number`): The fraction of the dialog's size that must be dragged to trigger a dismiss (Default `0.3`).
 - `dismissVelocity` (`number`): The velocity threshold for a flick to dismiss (Default `800`).
 - `backdropColor` (`string`): Color of the backdrop (Default `#000`).

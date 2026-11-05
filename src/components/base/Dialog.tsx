@@ -39,6 +39,7 @@ export interface DialogProps {
   onDismiss: () => void;
   position?: DialogPosition;
   disableDrag?: boolean;
+  disableAnimation?: boolean;
   dismissThreshold?: number;
   dismissVelocity?: number;
   backdropColor?: string;
@@ -116,6 +117,7 @@ const Dialog: React.FC<DialogProps> = ({
   onDismiss,
   position = "bottom",
   disableDrag = false,
+  disableAnimation = false,
   dismissThreshold = 0.3,
   dismissVelocity = 800,
   backdropColor = "#000",
@@ -135,15 +137,33 @@ const Dialog: React.FC<DialogProps> = ({
 
   const initial = useMemo(() => getInitialTranslate(position), [position]);
 
-  const translateX = useSharedValue(initial.x);
-  const translateY = useSharedValue(initial.y);
-  const scale = useSharedValue(position === "center" ? 0.85 : 1);
-  const backdropAnim = useSharedValue(0);
+  const translateX = useSharedValue(
+    disableAnimation && visible ? 0 : initial.x,
+  );
+  const translateY = useSharedValue(
+    disableAnimation && visible ? 0 : initial.y,
+  );
+  const scale = useSharedValue(
+    position === "center" && !(disableAnimation && visible) ? 0.85 : 1,
+  );
+  const backdropAnim = useSharedValue(disableAnimation && visible ? 1 : 0);
   const axis = useMemo(() => getDragAxis(position), [position]);
 
   // ── Helpers ────────────────────────────────────────────────────────────────
 
   const animateIn = useCallback(() => {
+    if (disableAnimation) {
+      backdropAnim.set(1);
+      if (position === "center") {
+        scale.set(1);
+      } else {
+        translateX.set(0);
+        translateY.set(0);
+      }
+      if (!disableHaptic) hapticFeedback(hapticType);
+      return;
+    }
+
     backdropAnim.set(
       withTiming(1, { duration: 250 }, (finished?: boolean) => {
         if (finished && !disableHaptic) {
@@ -158,10 +178,23 @@ const Dialog: React.FC<DialogProps> = ({
       translateY.set(withSpring(0, SPRING_CONFIG));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [position]);
+  }, [position, disableAnimation, disableHaptic, hapticFeedback, hapticType]);
 
   const animateOut = useCallback(
     (callback: () => void) => {
+      if (disableAnimation) {
+        backdropAnim.set(0);
+        if (position === "center") {
+          scale.set(0.85);
+        } else if (axis === "x") {
+          translateX.set(initial.x);
+        } else {
+          translateY.set(initial.y);
+        }
+        callback();
+        return;
+      }
+
       backdropAnim.set(withTiming(0, { duration: 200 }));
 
       if (position === "center") {
@@ -190,7 +223,7 @@ const Dialog: React.FC<DialogProps> = ({
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [position, axis, initial],
+    [position, axis, initial, disableAnimation],
   );
 
   // ── Effects ────────────────────────────────────────────────────────────────
@@ -198,18 +231,24 @@ const Dialog: React.FC<DialogProps> = ({
   useEffect(() => {
     const run = () => {
       if (visible) {
-        // Reset vị trí về trạng thái ẩn
-        if (position === "center") {
-          scale.set(0.85);
-        } else {
-          translateX.set(initial.x);
-          translateY.set(initial.y);
+        if (!disableAnimation) {
+          // Reset vị trí về trạng thái ẩn
+          if (position === "center") {
+            scale.set(0.85);
+          } else {
+            translateX.set(initial.x);
+            translateY.set(initial.y);
+          }
+          backdropAnim.set(0);
         }
-        backdropAnim.set(0);
 
         setLocalVisible(true);
         isVisible.current = true;
-        requestAnimationFrame(() => animateIn());
+        if (disableAnimation) {
+          animateIn();
+        } else {
+          requestAnimationFrame(() => animateIn());
+        }
       } else {
         if (isVisible.current) {
           isVisible.current = false;
@@ -274,14 +313,14 @@ const Dialog: React.FC<DialogProps> = ({
           onDismiss();
         } else {
           if (axis === "x") {
-            translateX.set(withSpring(0, SPRING_CONFIG));
+            translateX.set(disableAnimation ? 0 : withSpring(0, SPRING_CONFIG));
           } else {
-            translateY.set(withSpring(0, SPRING_CONFIG));
+            translateY.set(disableAnimation ? 0 : withSpring(0, SPRING_CONFIG));
           }
         }
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [disableDrag, axis, position, onDismiss]);
+  }, [disableDrag, disableAnimation, axis, position, onDismiss]);
 
   // ── Animated styles ────────────────────────────────────────────────────────
 

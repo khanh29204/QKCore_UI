@@ -37,6 +37,7 @@ Một component modal/hộp thoại điều khiển bằng cử chỉ vuốt, s�
 - `onDismiss` (`() => void`): Hàm gọi lại khi bấm ra ngoài nền hoặc khi vuốt để tắt.
 - `position` (`'bottom' | 'top' | 'left' | 'right' | 'center'`): Vị trí xuất hiện và đứng yên của hộp thoại. Vị trí `center` dùng hiệu ứng phóng to (scale); các vị trí khác dùng hiệu ứng trượt (slide).
 - `disableDrag` (`boolean`): Nếu là true, người dùng không thể vuốt để tắt hộp thoại.
+- `disableAnimation` (`boolean`): Nếu là true, hộp thoại hiện và ẩn ngay lập tức, không chạy animation.
 - `dismissThreshold` (`number`): Tỷ lệ phần trăm kích thước hộp thoại cần phải vuốt qua để kích hoạt lệnh tắt (Mặc định `0.3`).
 - `dismissVelocity` (`number`): Vận tốc vuốt (flick) cần đạt để tắt hộp thoại (Mặc định `800`).
 - `backdropColor` (`string`): Màu của nền tối phía sau (Mặc định `#000`).
